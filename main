@@ -1,0 +1,220 @@
+getgenv().sets = {
+	lucky = true, --collect lucky arrows
+	candy = true, --collect candies
+	errors = true --safe mode
+}
+if game.PlaceId == 2809202155 then
+	-- SERVER HOP --
+	function serverhop()
+		placeId = game.PlaceId
+		function findTeleport()
+			local nextCursor;
+			while true do
+				if nextCursor == 'end' then
+					break
+				elseif not nextCursor then
+					nextCursor = ''
+				end
+				print('Finding server...')
+				url = 'https://games.roblox.com/v1/games/'..tostring(placeId)..'/servers/Public?sortOrder=Desc&excludeFullGames=true&limit=100&cursor='..nextCursor
+				local request = game:HttpGet(url)
+				local jsonDecode = game:GetService("HttpService"):JSONDecode(request)
+				nextCursor = jsonDecode.nextPageCursor
+				if not nextCursor then
+					nextCursor = 'end'
+				end
+				local data = jsonDecode.data
+				for i,v in pairs(data) do
+					if not oldServers[v.id] then
+						serverId = v.id
+					end
+				end
+				if serverId then
+					print('New server: '..serverId)
+					game:GetService('TeleportService'):TeleportToPlaceInstance(placeId, serverId, game.Players.LocalPlayer, nil, oldServers)
+					break
+				end
+			end
+		end
+
+		oldServers = game:GetService('TeleportService'):GetLocalPlayerTeleportData() or {}
+		oldServers[game.JobId] = true
+		findTeleport()
+		if not serverId then
+			oldServers = {[game.JobId] = true}
+			findTeleport()
+		end
+		if not serverId then
+			oldServers = {}
+			findTeleport()
+		end
+	end
+	while not game:IsLoaded() do wait() end
+	--auto rejoin if some shit
+	game.Players.PlayerRemoving:Connect(function(player)
+		if player == game.Players.LocalPlayer and sets.errors and not getgenv().hop then
+			print('uh,kick attempt/teleport')
+			serverhop()
+		end
+	end)
+	--if error
+	local prompt = game:GetService('CoreGui'):FindFirstChild("RobloxPromptGui"):FindFirstChild("promptOverlay")
+	prompt.DescendantAdded:Connect(function(err)
+		if err.Name == "ErrorTitle" and sets.errors and not getgenv().hop then
+			print('uh,error')
+			err:GetPropertyChangedSignal("Text"):Connect(function()
+				serverhop()
+			end)
+		end
+	end)
+	--spawn items on client
+	oldmeta = hookmetamethod(game, '__newindex', function(self, key, val)
+		if self.Name == 'ItemSpawn' and key == 'OnClientInvoke' then
+			_G.spawnFunc = val
+			_G.funcReturn = getconstants(val)[3]
+			print('item hack loaded')
+			u1 = {}
+			funcfor = function(arg1, list)
+				if not u1[list.CD] then
+					u1[list.CD] = true
+					--print('Item added',list.Replica)
+					local clon = list.Replica:Clone()
+					clon.Parent = game:GetService("Workspace")["Item_Spawns"].Items
+					clon.Base.CFrame = list.CFrame
+					list.CD.Parent = clon
+					local v30 = list.CD:Clone()
+					v30.Enabled = true
+					v30.Parent = clon
+					v30.Name = 'RightPrompt'
+					u8 = {}
+					u8[1] = v30.Triggered:Connect(function(p2)
+						list.CD.RemoteEvent:FireServer()
+					end)
+					local function v31()
+						if not u1[list.CD] then
+							return
+						end
+						u1[list.CD] = nil
+						if clon then
+							clon:Destroy()
+						end
+						if list.CD then
+							list.CD:Destroy()
+						end
+					end
+					u8[2] = clon.ChildRemoved:Connect(function(p3)
+						if p3 == list.CD or not list.CD or not list.CD.Parent then
+							v31();
+						end;
+					end)
+				end
+				return _G.funcReturn
+			end
+			return oldmeta(self, key, funcfor)
+		end
+		return oldmeta(self, key, val)
+	end)
+	--anti-tp bypass
+	local oldnamecall
+	oldnamecall = hookmetamethod(game,"__namecall",function(self, ...)
+		local args = {...}
+		if string.lower(tostring(self.Name)) == "returner" and args[1] == "idklolbrah2de" then
+			return "  ___XP DE KEY"		
+		elseif string.lower(tostring(self.Name)) == "remote event" then
+			if args[1] == "Reset" then
+				return nil
+			end
+			if args[2] == "Enum.HumanoidStateType.PlatformStanding" then
+				return nil
+			end
+		elseif string.lower(getnamecallmethod()) == 'kick' then
+			print('kicked')
+			return nil
+		end
+		return oldnamecall(self, ...)
+	end)
+	print('anti-tp loaded')
+	--loading and play button --
+	while true do
+		for i,v in pairs(game:GetService("Players").LocalPlayer:WaitForChild('PlayerGui'):GetDescendants()) do
+			if v.Name == 'TextButton' and v.Parent.Name == 'Skip' then
+				loading = v
+			end
+		end
+		if loading then
+			break
+		end
+	end
+	task.wait(.1)
+	while #getconnections(loading.MouseButton1Click) == 0 do wait() end
+	for i,v in pairs(getconnections(loading.MouseButton1Click)) do
+		v.Function()
+	end
+	while true do
+		for i,v in pairs(game:GetService("Players").LocalPlayer:WaitForChild('PlayerGui'):GetDescendants()) do
+			if v.Name == 'Play' and v.Parent.Name == 'LoadingScreen' then
+				playbtn = v
+			end
+		end
+		if playbtn then
+			break
+		end
+	end
+	task.wait(.1)
+	while #getconnections(playbtn.MouseButton1Click) == 0 do wait() end
+	for i,v in pairs(getconnections(playbtn.MouseButton1Click)) do
+		v.Function()
+	end
+	print('play button clicked')
+	--loop
+	local players = game.Players
+	local player = players.LocalPlayer
+	local teleportService = game:GetService('TeleportService')
+	local httpService = game:GetService('HttpService')
+	task.spawn(function()
+		task.wait(15)
+		getgenv().hop = true -- хоп через 15 секунд
+	end)
+	task.wait(.1)
+	print('loop started')
+	while task.wait() do --autofarm loop
+		local items2 = 0 --counter
+		for i,v in pairs(game.Workspace.Item_Spawns.Items:GetChildren()) do
+			if string.find(string.lower(v.Name), 'candy') and sets.candy and v:FindFirstChild('RightPrompt') then
+				items2 += 1--for future checks
+				if v.Parent then
+					player.Character.HumanoidRootPart.CFrame = CFrame.new(v.Base.Position) --teleport
+					print('teleported')
+					task.wait(1.5)--chill
+					if player:DistanceFromCharacter(v.Base.Position) < 10 then --if teleported
+						task.wait(1.5)--chill
+						fireproximityprompt(v.RightPrompt)
+						print('collected?')
+						task.wait(1.5)--chill
+						items2 -= 1 --uh?
+					end
+				end
+			end
+			if string.find(string.lower(v.Name), 'lucky') and sets.lucky and v:FindFirstChild('RightPrompt') then
+				items2 += 1--for future checks
+				if v.Parent then
+					player.Character.HumanoidRootPart.CFrame = CFrame.new(v.Base.Position) --teleport
+					print('teleported')
+					task.wait(3)--chill
+					if player:DistanceFromCharacter(v.Base.Position) < 10 then --if teleported
+						task.wait(3)--chill
+						fireproximityprompt(v.RightPrompt)
+						print('collected?') 
+						task.wait(3)--chill
+						items2 -= 1 --uh?
+					end
+				end
+			end
+		end
+		if items2 < 1 and getgenv().hop then
+			game.Players.LocalPlayer.Character:Destroy() --respawn
+			serverhop()
+			break
+		end
+	end
+end
