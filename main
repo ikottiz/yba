@@ -174,7 +174,7 @@ if game.PlaceId == 2809202155 then
 				if v.Name == key and value then
 					items2 += 1
 					print('item finded')
-					if v.Parent then
+					if v.Parent and v:FindFirstChild('Base') and v:FindFirstChild('RightPrompt') then
 					    	player.Character.HumanoidRootPart.CFrame = CFrame.new(v.Base.Position)
 						print('teleported')
 						task.wait(tonumber(d.settings.defaultTime))
