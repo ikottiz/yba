@@ -28,7 +28,6 @@ if game.PlaceId == 2809202155 then
 				elseif not nextCursor then
 					nextCursor = ''
 				end
-				print('Finding server...')
 				url = 'https://games.roblox.com/v1/games/'..tostring(placeId)..'/servers/Public?sortOrder=Desc&excludeFullGames=true&limit=100&cursor='..nextCursor
 				local request = game:HttpGet(url)
 				local jsonDecode = game:GetService("HttpService"):JSONDecode(request)
@@ -43,7 +42,6 @@ if game.PlaceId == 2809202155 then
 					end
 				end
 				if serverId then
-					print('New server: '..serverId)
 					game:GetService('TeleportService'):TeleportToPlaceInstance(placeId, serverId, game.Players.LocalPlayer, nil, oldServers)
 					break
 				end
@@ -69,7 +67,6 @@ if game.PlaceId == 2809202155 then
 		if self.Name == 'ItemSpawn' and key == 'OnClientInvoke' then
 			_G.spawnFunc = val
 			_G.funcReturn = getconstants(val)[3]
-			print('item handler loaded')
 			u1 = {}
 			funcfor = function(arg1, list)
 				if not u1[list.CD] then
@@ -125,7 +122,6 @@ if game.PlaceId == 2809202155 then
 				return nil
 			end
 		elseif string.lower(getnamecallmethod()) == 'kick' then
-			print('kicked')
 			return nil
 		end
 		return oldnamecall(self, ...)
@@ -142,7 +138,6 @@ if game.PlaceId == 2809202155 then
 			end;		
 		end;
 	end
-	print('anti-tp loaded')
 	--loading and play button --
 	while true do
 		for i,v in pairs(game:GetService("Players").LocalPlayer:WaitForChild('PlayerGui'):GetDescendants()) do
@@ -183,22 +178,18 @@ if game.PlaceId == 2809202155 then
 		getgenv().hop = true
 	end)
 	task.wait(.5)
-	print('loop started')
 	while task.wait() do --autofarm loop
 		local items2 = 0 --counter
 		for i,v in pairs(game.Workspace.Item_Spawns.Items:GetChildren()) do
 			for key,value in pairs(d.items) do
 				if v.Name == key and value then
-					print('item found')
 					items2 += 1
 					if v.Parent then
 						player.Character.HumanoidRootPart.CFrame = CFrame.new(v.Base.Position)
-						print('teleported')
 						task.wait(2.5)
 						if player:DistanceFromCharacter(v.Base.Position) < 10 then --if teleported
 							task.wait(1.5)
 							fireproximityprompt(v.RightPrompt)
-							print('collected?')
 							task.wait(1.5)
 							items2 -= 1
 						end
