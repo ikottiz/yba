@@ -124,7 +124,7 @@ if game.PlaceId == 2809202155 then
 		end;
 	end
 	--loading and play button --
-	task.wait(d.settings.defaultTime)
+	task.wait(tonumber(d.setting.defaultTime))
 	while true do
 		for i,v in pairs(game:GetService("Players").LocalPlayer:WaitForChild('PlayerGui'):GetDescendants()) do
 			if v.Name == 'TextButton' and v.Parent.Name == 'Skip' then
@@ -139,7 +139,7 @@ if game.PlaceId == 2809202155 then
 	for i,v in pairs(getconnections(loading.MouseButton1Click)) do
 		v.Function()
 	end
-	task.wait(d.setting.defaultTime)
+	task.wait(tonumber(d.setting.defaultTime))
 	while true do
 		for i,v in pairs(game:GetService("Players").LocalPlayer:WaitForChild('PlayerGui'):GetDescendants()) do
 			if v.Name == 'Play' and v.Parent.Name == 'LoadingScreen' then
