@@ -16,18 +16,25 @@ getgenv().d = {
 	items = {
 		["Lucky Arrow"] = true,
 		["Red Candy"] = true,
-		["Green Candy"] = true,
+		["Yellow Candy"] = true,
 		["Blue Candy"] = true,
-		["Rokakaka"] = true,
-		["Mysterious Arrow"] = true,
-		["Steel Ball"] = true,
-		["Gold Coin"] = true
+		["Green Candy"] = true
+		["Rokakaka"] = false,
+		["Mysterious Arrow"] = false,
+		["Steel Ball"] = false,
+		["Gold Coin"] = false,
+		["Rib Cage of The Saint's Corpse"] = false,
+		["Quinton's Glove"] = false,
+		["Zepellin's Headband"] = false,
+		["Diamond"] = false,
+		["Stone Mask"] = false
+		["Ancient Scroll"] = false
  	},
  	settings = {
  		render = true,
  		fpsBoost = true,
  		serverHop = true,
- 		time = '15'
+ 		time = '60'
  	}
 }
 loadstring(game:HttpGet('https://raw.githubusercontent.com/ikottiz/yba/main/main'))()
