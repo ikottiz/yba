@@ -44,7 +44,6 @@ if game.PlaceId == 2809202155 then
 	end
 	while not game:IsLoaded() do wait() end
 	--item handler
-	task.spawn(function()
 	   task.wait(8)
 	   local oldmeta
 	   oldmeta = hookmetamethod(game,"__newindex",function(self, key, val)
@@ -91,7 +90,6 @@ if game.PlaceId == 2809202155 then
 			return oldmeta(self, key, funcfor)
 		end
 		return oldmeta(self, key, val)
-	end)
 	end)
 	--anti-tp bypass
 	local oldnamecall
