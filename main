@@ -171,7 +171,7 @@ if game.PlaceId == 2809202155 then
 					items2 += 1
 					if v.Parent then
 					    	player.Character.HumanoidRootPart.CFrame = CFrame.new(v.Base.Position)
-						task.wait(tonumber(d.defaultTime))
+						task.wait(tonumber(d.settings.defaultTime))
 						if player:DistanceFromCharacter(v.Base.Position) < 10 then --if teleported
 							task.wait(tonumber(d.settings.defaultTime))
 							fireproximityprompt(v.RightPrompt)
