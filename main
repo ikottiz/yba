@@ -47,9 +47,13 @@ if game.PlaceId == 2809202155 then
 	   local oldmeta
 	   oldmeta = hookmetamethod(game,"__newindex",function(self, key, val)
 		if self.Name == 'ItemSpawn' and key == 'OnClientInvoke' then
+		print('item handler1')
 			_G.spawnFunc = val
+			print('item handler2')
 			_G.funcReturn = getconstants(val)[3]
+			print('item handler3')
 			u1 = {}
+			print('item handler4')
 			print('item handler loaded')
 			funcfor = function(arg1, list)
 				if not u1[list.CD] then
