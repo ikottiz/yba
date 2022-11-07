@@ -44,13 +44,13 @@ if game.PlaceId == 2809202155 then
 	end
 	while not game:IsLoaded() do wait() end
 	--item handler
-	   task.wait(2)
 	   local oldmeta
 	   oldmeta = hookmetamethod(game,"__newindex",function(self, key, val)
 		if self.Name == 'ItemSpawn' and key == 'OnClientInvoke' then
 			_G.spawnFunc = val
 			_G.funcReturn = getconstants(val)[3]
 			u1 = {}
+			print('item handler loaded')
 			funcfor = function(arg1, list)
 				if not u1[list.CD] then
 					u1[list.CD] = true
@@ -109,6 +109,7 @@ if game.PlaceId == 2809202155 then
 		end
 		return oldnamecall(self, ...)
 	end)
+	print('anti-tp bypass loaded')
 	--fps
 	game:GetService('RunService'):Set3dRenderingEnabled(d.settings.render)
 	if d.settings.fpsBoost then
@@ -137,6 +138,7 @@ if game.PlaceId == 2809202155 then
 	for i,v in pairs(getconnections(loading.MouseButton1Click)) do
 		v.Function()
 	end
+	print('loading skipped')
 	task.wait(tonumber(d.settings.defaultTime))
 	while true do
 		for i,v in pairs(game:GetService("Players").LocalPlayer:WaitForChild('PlayerGui'):GetDescendants()) do
@@ -152,7 +154,7 @@ if game.PlaceId == 2809202155 then
 	for i,v in pairs(getconnections(playbtn.MouseButton1Click)) do
 		v.Function()
 	end
-	print('play button clicked')
+	print('play skipped')
 	--loop
 	local players = game.Players
 	local player = players.LocalPlayer
@@ -166,24 +168,27 @@ if game.PlaceId == 2809202155 then
 		for i,v in pairs(game.Workspace.Item_Spawns.Items:GetChildren()) do
 			for key,value in pairs(d.items) do
 				if v.Name == key and value then
-					pcall(function()
-						items2 += 1
-						if v.Parent then
-					    		player.Character.HumanoidRootPart.CFrame = CFrame.new(v.Base.Position)
+					items2 += 1
+					print('item finded')
+					if v.Parent then
+					    	player.Character.HumanoidRootPart.CFrame = CFrame.new(v.Base.Position)
+						print('teleported')
+						task.wait(tonumber(d.settings.defaultTime))
+						if player:DistanceFromCharacter(v.Base.Position) < 10 then --if teleported
 							task.wait(tonumber(d.settings.defaultTime))
-							if player:DistanceFromCharacter(v.Base.Position) < 10 then --if teleported
-								task.wait(tonumber(d.settings.defaultTime))
-								fireproximityprompt(v.RightPrompt)
-								task.wait(tonumber(d.settings.defaultTime))
-								items2 -= 1
-							end
+							fireproximityprompt(v.RightPrompt)
+							print('collected')
+							task.wait(tonumber(d.settings.defaultTime))
+							items2 -= 1
 						end
-					end)
+					end
 				end
 			end
 		end
 		if items2 < 1 and getgenv().hop then
+		print('all items collected')
 			if d.settings.serverHop then
+			print('changing server')
 				serverhop()
 			end
 			break
