@@ -1,21 +1,3 @@
-getgenv().d = {
-	items = {
-		["Lucky Arrow"] = true,
-		["Red Candy"] = true,
-		["Green Candy"] = true,
-		["Blue Candy"] = true,
-		["Rokakaka"] = true,
-		["Mysterious Arrow"] = true,
-		["Steel Ball"] = true,
-		["Gold Coin"] = true
- 	},
- 	settings = {
- 		render = true,
- 		fpsBoost = true,
- 		serverHop = true,
- 		time = 15
- 	}
-}
 if game.PlaceId == 2809202155 then
 	--serverhop
 	function serverhop()
