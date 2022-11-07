@@ -1,7 +1,11 @@
 # yba
 uh,farms candies and lucky arrows
+guide:
+1.Create empty file in your 'autoexec' folder
+2.Put script into file and change settings if you want
+3.Voilà!
 by ikottiz#4863 and Не о6язан#3965
-Loadstring:
+script:
 ```
 getgenv().d = {
 	items = {
