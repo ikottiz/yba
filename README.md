@@ -34,7 +34,8 @@ getgenv().d = {
  		render = true,
  		fpsBoost = true,
  		serverHop = true,
- 		time = '60'
+ 		serverTime = '60',
+		defaultTime = '1.5'
  	}
 }
 loadstring(game:HttpGet('https://raw.githubusercontent.com/ikottiz/yba/main/main'))()
