@@ -110,7 +110,7 @@ if game.PlaceId == 2809202155 then
 				return nil
 			end
 		elseif string.lower(getnamecallmethod()) == 'kick' then
-			return nil
+			serverhop()
 		end
 		return oldnamecall(self, ...)
 	end)
