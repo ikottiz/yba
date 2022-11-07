@@ -44,8 +44,10 @@ if game.PlaceId == 2809202155 then
 	end
 	while not game:IsLoaded() do wait() end
 	--item handler
-	local oldmeta
-	oldmeta = hookmetamethod(game,"__newindex",function(self, key, val)
+	task.spawn(function()
+	   task.wait(8)
+	   local oldmeta
+	   oldmeta = hookmetamethod(game,"__newindex",function(self, key, val)
 		if self.Name == 'ItemSpawn' and key == 'OnClientInvoke' then
 			_G.spawnFunc = val
 			_G.funcReturn = getconstants(val)[3]
@@ -89,6 +91,7 @@ if game.PlaceId == 2809202155 then
 			return oldmeta(self, key, funcfor)
 		end
 		return oldmeta(self, key, val)
+	end)
 	end)
 	--anti-tp bypass
 	local oldnamecall
