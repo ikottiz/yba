@@ -1,10 +1,23 @@
-getgenv().sets = {
-	lucky = true, --collect lucky arrows
-	candy = true, --collect candies
-	errors = true --safe mode
+getgenv().d = {
+	items = {
+		["Lucky Arrow"] = true,
+		["Red Candy"] = true,
+		["Green Candy"] = true,
+		["Blue Candy"] = true,
+		["Rokakaka"] = true,
+		["Mysterious Arrow"] = true,
+		["Steel Ball"] = true,
+		["Gold Coin"] = true
+ 	},
+ 	settings = {
+ 		render = true,
+ 		fpsBoost = true,
+ 		serverHop = true,
+ 		time = 15
+ 	}
 }
 if game.PlaceId == 2809202155 then
-	-- SERVER HOP --
+	--serverhop
 	function serverhop()
 		placeId = game.PlaceId
 		function findTeleport()
@@ -50,29 +63,13 @@ if game.PlaceId == 2809202155 then
 		end
 	end
 	while not game:IsLoaded() do wait() end
-	--auto rejoin if some shit
-	game.Players.PlayerRemoving:Connect(function(player)
-		if player == game.Players.LocalPlayer and sets.errors and not getgenv().hop then
-			print('uh,kick attempt/teleport')
-			serverhop()
-		end
-	end)
-	--if error
-	local prompt = game:GetService('CoreGui'):FindFirstChild("RobloxPromptGui"):FindFirstChild("promptOverlay")
-	prompt.DescendantAdded:Connect(function(err)
-		if err.Name == "ErrorTitle" and sets.errors and not getgenv().hop then
-			print('uh,error')
-			err:GetPropertyChangedSignal("Text"):Connect(function()
-				serverhop()
-			end)
-		end
-	end)
-	--spawn items on client
-	oldmeta = hookmetamethod(game, '__newindex', function(self, key, val)
+	--item handler
+	local oldmeta
+	oldmeta = hookmetamethod(game,"__newindex",function(self, key, val)
 		if self.Name == 'ItemSpawn' and key == 'OnClientInvoke' then
 			_G.spawnFunc = val
 			_G.funcReturn = getconstants(val)[3]
-			print('item hack loaded')
+			print('item handler loaded')
 			u1 = {}
 			funcfor = function(arg1, list)
 				if not u1[list.CD] then
@@ -133,6 +130,18 @@ if game.PlaceId == 2809202155 then
 		end
 		return oldnamecall(self, ...)
 	end)
+	--fps
+	game:GetService('RunService'):Set3dRenderingEnabled(d.settings.render)
+	if d.settings.fpsBoost then
+		for _,v in pairs(game:GetService("Workspace"):GetDescendants()) do
+			if v:IsA("BasePart") and not v.Parent:FindFirstChild("Humanoid") then
+				v.Material = Enum.Material.SmoothPlastic;
+				if v:IsA("Texture") then
+					v:Destroy();
+				end 
+			end;		
+		end;
+	end
 	print('anti-tp loaded')
 	--loading and play button --
 	while true do
@@ -169,51 +178,38 @@ if game.PlaceId == 2809202155 then
 	--loop
 	local players = game.Players
 	local player = players.LocalPlayer
-	local teleportService = game:GetService('TeleportService')
-	local httpService = game:GetService('HttpService')
 	task.spawn(function()
-		task.wait(15)
-		getgenv().hop = true -- хоп через 15 секунд
+		task.wait(time)
+		getgenv().hop = true
 	end)
-	task.wait(.1)
+	task.wait(.5)
 	print('loop started')
 	while task.wait() do --autofarm loop
 		local items2 = 0 --counter
 		for i,v in pairs(game.Workspace.Item_Spawns.Items:GetChildren()) do
-			if string.find(string.lower(v.Name), 'candy') and sets.candy and v:FindFirstChild('RightPrompt') then
-				items2 += 1--for future checks
-				if v.Parent then
-					player.Character.HumanoidRootPart.CFrame = CFrame.new(v.Base.Position) --teleport
-					print('teleported')
-					task.wait(1.5)--chill
-					if player:DistanceFromCharacter(v.Base.Position) < 10 then --if teleported
-						task.wait(1.5)--chill
-						fireproximityprompt(v.RightPrompt)
-						print('collected?')
-						task.wait(1.5)--chill
-						items2 -= 1 --uh?
-					end
-				end
-			end
-			if string.find(string.lower(v.Name), 'lucky') and sets.lucky and v:FindFirstChild('RightPrompt') then
-				items2 += 1--for future checks
-				if v.Parent then
-					player.Character.HumanoidRootPart.CFrame = CFrame.new(v.Base.Position) --teleport
-					print('teleported')
-					task.wait(3)--chill
-					if player:DistanceFromCharacter(v.Base.Position) < 10 then --if teleported
-						task.wait(3)--chill
-						fireproximityprompt(v.RightPrompt)
-						print('collected?') 
-						task.wait(3)--chill
-						items2 -= 1 --uh?
+			for key,value in pairs(d.items) do
+				if v.Name == key and value then
+					print('item found')
+					items2 += 1
+					if v.Parent then
+						player.Character.HumanoidRootPart.CFrame = CFrame.new(v.Base.Position)
+						print('teleported')
+						task.wait(2.5)
+						if player:DistanceFromCharacter(v.Base.Position) < 10 then --if teleported
+							task.wait(1.5)
+							fireproximityprompt(v.RightPrompt)
+							print('collected?')
+							task.wait(1.5)
+							items2 -= 1
+						end
 					end
 				end
 			end
 		end
 		if items2 < 1 and getgenv().hop then
-			game.Players.LocalPlayer.Character:Destroy() --respawn
-			serverhop()
+			if d.settings.serverHop then
+				serverhop()
+			end
 			break
 		end
 	end
