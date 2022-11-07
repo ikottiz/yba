@@ -168,17 +168,19 @@ if game.PlaceId == 2809202155 then
 		for i,v in pairs(game.Workspace.Item_Spawns.Items:GetChildren()) do
 			for key,value in pairs(d.items) do
 				if v.Name == key and value then
-					items2 += 1
-					if v.Parent then
-					    	player.Character.HumanoidRootPart.CFrame = CFrame.new(v.Base.Position)
-						task.wait(tonumber(d.settings.defaultTime))
-						if player:DistanceFromCharacter(v.Base.Position) < 10 then --if teleported
+					pcall(function()
+						items2 += 1
+						if v.Parent then
+					    		player.Character.HumanoidRootPart.CFrame = CFrame.new(v.Base.Position)
 							task.wait(tonumber(d.settings.defaultTime))
-							fireproximityprompt(v.RightPrompt)
-							task.wait(tonumber(d.settings.defaultTime))
-							items2 -= 1
+							if player:DistanceFromCharacter(v.Base.Position) < 10 then --if teleported
+								task.wait(tonumber(d.settings.defaultTime))
+								fireproximityprompt(v.RightPrompt)
+								task.wait(tonumber(d.settings.defaultTime))
+								items2 -= 1
+							end
 						end
-					end
+					end)
 				end
 			end
 		end
