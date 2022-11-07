@@ -156,7 +156,7 @@ if game.PlaceId == 2809202155 then
 	local players = game.Players
 	local player = players.LocalPlayer
 	task.spawn(function()
-		task.wait(time)
+		task.wait(d.settings.time)
 		getgenv().hop = true
 	end)
 	task.wait(.5)
