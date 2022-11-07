@@ -146,7 +146,7 @@ if game.PlaceId == 2809202155 then
 			break
 		end
 	end
-	task.wait(.1)
+	task.wait(tonumber(d.defaultTime))
 	while #getconnections(playbtn.MouseButton1Click) == 0 do wait() end
 	for i,v in pairs(getconnections(playbtn.MouseButton1Click)) do
 		v.Function()
@@ -159,7 +159,7 @@ if game.PlaceId == 2809202155 then
 		task.wait(tonumber(d.settings.time))
 		getgenv().hop = true
 	end)
-	task.wait(.5)
+	task.wait(tonumber(d.defaultTime))
 	while task.wait() do --autofarm loop
 		local items2 = 0 --counter
 		for i,v in pairs(game.Workspace.Item_Spawns.Items:GetChildren()) do
@@ -168,11 +168,11 @@ if game.PlaceId == 2809202155 then
 					items2 += 1
 					if v.Parent then
 						player.Character.HumanoidRootPart.CFrame = CFrame.new(v.Base.Position)
-						task.wait(2.5)
+						task.wait(tonumber(d.defaultTime))
 						if player:DistanceFromCharacter(v.Base.Position) < 10 then --if teleported
-							task.wait(1.5)
+							task.wait(tonumber(d.defaultTime))
 							fireproximityprompt(v.RightPrompt)
-							task.wait(1.5)
+							task.wait(tonumber(d.defaultTime))
 							items2 -= 1
 						end
 					end
