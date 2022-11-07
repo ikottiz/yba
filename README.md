@@ -27,8 +27,9 @@ getgenv().d = {
 		["Quinton's Glove"] = false,
 		["Zepellin's Headband"] = false,
 		["Diamond"] = false,
-		["Stone Mask"] = false
-		["Ancient Scroll"] = false
+		["Stone Mask"] = false,
+		["Ancient Scroll"] = false,
+		["DIO'S DIARY"] = false
  	},
  	settings = {
  		render = true,
