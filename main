@@ -94,7 +94,6 @@ if game.PlaceId == 2809202155 then
 							v31();
 						end;
 					end)
-					print('item handler loaded')
 				end
 				return _G.funcReturn
 			end
