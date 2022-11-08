@@ -43,8 +43,14 @@ if game.PlaceId == 2809202155 then
 			findTeleport()
 		end
 	end
+	--error handler
+	game:GetService('CoreGui').RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(child)
+		if child.Name == 'ErrorPrompt' then
+			serverhop()
+		end
+	end)
 	--item handler
-	   local oldmeta
+		   local oldmeta
 	   print('item handler0')
 	   oldmeta = hookmetamethod(game,"__newindex",function(self, key, val)
 		if self.Name == 'ItemSpawn' and key == 'OnClientInvoke' then
@@ -95,12 +101,6 @@ if game.PlaceId == 2809202155 then
 			return oldmeta(self, key, funcfor)
 		end
 		return oldmeta(self, key, val)
-	end)
-	--error handler
-	game:GetService('CoreGui').RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(child)
-		if child.Name == 'ErrorPrompt' then
-			serverhop()
-		end
 	end)
 	--anti-tp bypass
 	local oldnamecall
