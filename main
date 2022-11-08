@@ -175,13 +175,14 @@ if game.PlaceId == 2809202155 then
 				if v.Name == key and value then
 					items2 += 1
 					print('item found:',key)
-					if v.Parent and v:FindFirstChild('Base') and v:FindFirstChild('RightPrompt') then
-					    	player.Character.HumanoidRootPart.CFrame = CFrame.new(v.Base.Position)
+					local base,prompt = v:FindFirstChild('Base'),v:FindFirstChild('RightPrompt')
+					if v.Parent then
+					    	player.Character.HumanoidRootPart.CFrame = CFrame.new(base.Position)
 						print('teleported')
 						task.wait(tonumber(d.settings.defaultTime))
-						if player:DistanceFromCharacter(v.Base.Position) < 10 then --if teleported
+						if player:DistanceFromCharacter(base.Position) < 10 then --if teleported
 							task.wait(tonumber(d.settings.defaultTime))
-							fireproximityprompt(v.RightPrompt)
+							fireproximityprompt(prompt)
 							print('collected:',key)
 							task.wait(tonumber(d.settings.defaultTime))
 							items2 -= 1
