@@ -1,3 +1,4 @@
+--serverhop
 function serverhop()
 	placeId = game.PlaceId
 	function findTeleport()
@@ -41,7 +42,6 @@ function serverhop()
 	end
 end
 if game.PlaceId == 2809202155 then
-	--serverhop
 	while not game:IsLoaded() do wait() end
 	print('item handler0')
 	--item handler
