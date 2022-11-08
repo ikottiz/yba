@@ -1,47 +1,47 @@
-if game.PlaceId == 2809202155 then
-	--serverhop
-	function serverhop()
-		placeId = game.PlaceId
-		function findTeleport()
-			local nextCursor;
-			while true do
-				if nextCursor == 'end' then
-					break
-				elseif not nextCursor then
-					nextCursor = ''
-				end
-				url = 'https://games.roblox.com/v1/games/'..tostring(placeId)..'/servers/Public?sortOrder=Desc&excludeFullGames=true&limit=100&cursor='..nextCursor
-				local request = game:HttpGet(url)
-				local jsonDecode = game:GetService("HttpService"):JSONDecode(request)
-				nextCursor = jsonDecode.nextPageCursor
-				if not nextCursor then
-					nextCursor = 'end'
-				end
-				local data = jsonDecode.data
-				for i,v in pairs(data) do
-					if not oldServers[v.id] then
-						serverId = v.id
-					end
-				end
-				if serverId then
-					game:GetService('TeleportService'):TeleportToPlaceInstance(placeId, serverId, game.Players.LocalPlayer, nil, oldServers)
-					break
+function serverhop()
+	placeId = game.PlaceId
+	function findTeleport()
+		local nextCursor;
+		while true do
+			if nextCursor == 'end' then
+				break
+			elseif not nextCursor then
+				nextCursor = ''
+			end
+			url = 'https://games.roblox.com/v1/games/'..tostring(placeId)..'/servers/Public?sortOrder=Desc&excludeFullGames=true&limit=100&cursor='..nextCursor
+			local request = game:HttpGet(url)
+			local jsonDecode = game:GetService("HttpService"):JSONDecode(request)
+			nextCursor = jsonDecode.nextPageCursor
+			if not nextCursor then
+				nextCursor = 'end'
+			end
+			local data = jsonDecode.data
+			for i,v in pairs(data) do
+				if not oldServers[v.id] then
+					serverId = v.id
 				end
 			end
-		end
-
-		oldServers = game:GetService('TeleportService'):GetLocalPlayerTeleportData() or {}
-		oldServers[game.JobId] = true
-		findTeleport()
-		if not serverId then
-			oldServers = {[game.JobId] = true}
-			findTeleport()
-		end
-		if not serverId then
-			oldServers = {}
-			findTeleport()
+			if serverId then
+				game:GetService('TeleportService'):TeleportToPlaceInstance(placeId, serverId, game.Players.LocalPlayer, nil, oldServers)
+				break
+			end
 		end
 	end
+
+	oldServers = game:GetService('TeleportService'):GetLocalPlayerTeleportData() or {}
+	oldServers[game.JobId] = true
+	findTeleport()
+	if not serverId then
+		oldServers = {[game.JobId] = true}
+		findTeleport()
+	end
+	if not serverId then
+		oldServers = {}
+		findTeleport()
+	end
+end
+if game.PlaceId == 2809202155 then
+	--serverhop
 	while not game:IsLoaded() do wait() end
 	print('item handler0')
 	--item handler
@@ -96,6 +96,12 @@ if game.PlaceId == 2809202155 then
 		end
 		return oldmeta(self, key, val)
 	end)
+	--error handler
+	game:GetService('CoreGui').RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(child)
+		if child.Name == 'ErrorPrompt' then
+			serverhop()
+		end
+	end)
 	--anti-tp bypass
 	local oldnamecall
 	oldnamecall = hookmetamethod(game,"__namecall",function(self, ...)
@@ -109,8 +115,6 @@ if game.PlaceId == 2809202155 then
 			if args[2] == "Enum.HumanoidStateType.PlatformStanding" then
 				return nil
 			end
-		elseif string.lower(getnamecallmethod()) == 'kick' then
-			serverhop()
 		end
 		return oldnamecall(self, ...)
 	end)
