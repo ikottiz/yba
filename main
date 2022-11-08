@@ -1,49 +1,49 @@
 --serverhop
-function serverhop()
-	placeId = game.PlaceId
-	function findTeleport()
-		local nextCursor;
-		while true do
-			if nextCursor == 'end' then
-				break
-			elseif not nextCursor then
-				nextCursor = ''
-			end
-			url = 'https://games.roblox.com/v1/games/'..tostring(placeId)..'/servers/Public?sortOrder=Desc&excludeFullGames=true&limit=100&cursor='..nextCursor
-			local request = game:HttpGet(url)
-			local jsonDecode = game:GetService("HttpService"):JSONDecode(request)
-			nextCursor = jsonDecode.nextPageCursor
-			if not nextCursor then
-				nextCursor = 'end'
-			end
-			local data = jsonDecode.data
-			for i,v in pairs(data) do
-				if not oldServers[v.id] then
-					serverId = v.id
-				end
-			end
-			if serverId then
-				game:GetService('TeleportService'):TeleportToPlaceInstance(placeId, serverId, game.Players.LocalPlayer, nil, oldServers)
-				break
-			end
-		end
-	end
-
-	oldServers = game:GetService('TeleportService'):GetLocalPlayerTeleportData() or {}
-	oldServers[game.JobId] = true
-	findTeleport()
-	if not serverId then
-		oldServers = {[game.JobId] = true}
-		findTeleport()
-	end
-	if not serverId then
-		oldServers = {}
-		findTeleport()
-	end
-end
 if game.PlaceId == 2809202155 then
 	while not game:IsLoaded() do wait() end
 	print('item handler0')
+	function serverhop()
+		placeId = game.PlaceId
+		function findTeleport()
+			local nextCursor;
+			while true do
+				if nextCursor == 'end' then
+					break
+				elseif not nextCursor then
+					nextCursor = ''
+				end
+				url = 'https://games.roblox.com/v1/games/'..tostring(placeId)..'/servers/Public?sortOrder=Desc&excludeFullGames=true&limit=100&cursor='..nextCursor
+				local request = game:HttpGet(url)
+				local jsonDecode = game:GetService("HttpService"):JSONDecode(request)
+				nextCursor = jsonDecode.nextPageCursor
+				if not nextCursor then
+					nextCursor = 'end'
+				end
+				local data = jsonDecode.data
+				for i,v in pairs(data) do
+					if not oldServers[v.id] then
+						serverId = v.id
+					end
+				end
+				if serverId then
+					game:GetService('TeleportService'):TeleportToPlaceInstance(placeId, serverId, game.Players.LocalPlayer, nil, oldServers)
+					break
+				end
+			end
+		end
+
+		oldServers = game:GetService('TeleportService'):GetLocalPlayerTeleportData() or {}
+		oldServers[game.JobId] = true
+		findTeleport()
+		if not serverId then
+			oldServers = {[game.JobId] = true}
+			findTeleport()
+		end
+		if not serverId then
+			oldServers = {}
+			findTeleport()
+		end
+	end
 	--item handler
 	   local oldmeta
 	   oldmeta = hookmetamethod(game,"__newindex",function(self, key, val)
@@ -55,7 +55,6 @@ if game.PlaceId == 2809202155 then
 			print('item handler3')
 			u1 = {}
 			print('item handler4')
-			print('item handler loaded')
 			funcfor = function(arg1, list)
 				if not u1[list.CD] then
 					u1[list.CD] = true
@@ -89,6 +88,7 @@ if game.PlaceId == 2809202155 then
 							v31();
 						end;
 					end)
+					print('item handler loaded')
 				end
 				return _G.funcReturn
 			end
