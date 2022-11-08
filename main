@@ -180,7 +180,7 @@ if game.PlaceId == 2809202155 then
 						print('teleported')
 						task.wait(tonumber(d.settings.defaultTime))
 						if player:DistanceFromCharacter(v.Base.Position) < 10 then --if teleported
-							task.wait(tonumber(d.settings.defaultTime - .7))
+							task.wait(tonumber(d.settings.defaultTime))
 							fireproximityprompt(v.RightPrompt)
 							print('collected ',k)
 							task.wait(tonumber(d.settings.defaultTime))
