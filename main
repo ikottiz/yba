@@ -1,7 +1,6 @@
---serverhop
 if game.PlaceId == 2809202155 then
 	while not game:IsLoaded() do wait() end
-	print('item handler0')
+	--serverhop
 	function serverhop()
 		placeId = game.PlaceId
 		function findTeleport()
@@ -46,6 +45,7 @@ if game.PlaceId == 2809202155 then
 	end
 	--item handler
 	   local oldmeta
+	   print('item handler0')
 	   oldmeta = hookmetamethod(game,"__newindex",function(self, key, val)
 		if self.Name == 'ItemSpawn' and key == 'OnClientInvoke' then
 		print('item handler1')
