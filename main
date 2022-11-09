@@ -1,7 +1,63 @@
 if game.PlaceId == 2809202155 then
+	--item handler
+	local oldnewindex
+	oldnewindex = hookmetamethod(game,"__newindex",function(self, key, val)
+		if self.Name == 'ItemSpawn' and key == 'OnClientInvoke' then
+			if d.settings.debug then
+				print('hook started')
+			end
+			_G.spawnFunc = val
+			if d.settings.debug then
+				print('spawn function defined')
+			end
+			_G.funcReturn = getconstants(val)[3]
+			if d.settings.debug then
+				print('return function defined')
+			end
+			u1 = {}
+			funcfor = function(arg1, list)
+				if not u1[list.CD] then
+					u1[list.CD] = true
+					--print('Item added',list.Replica)
+					local clon = list.Replica:Clone()
+					clon.Parent = game:GetService("Workspace")["Item_Spawns"].Items
+					clon.Base.CFrame = list.CFrame
+					list.CD.Parent = clon
+					local v30 = list.CD:Clone()
+					v30.Enabled = true
+					v30.Parent = clon
+					v30.Name = 'RightPrompt'
+					u8 = {}
+					u8[1] = v30.Triggered:Connect(function(p2)
+						list.CD.RemoteEvent:FireServer()
+					end)
+					local function v31()
+						if not u1[list.CD] then
+							return
+						end
+						u1[list.CD] = nil
+						if clon then
+							clon:Destroy()
+						end
+						if list.CD then
+							list.CD:Destroy()
+						end
+					end
+					u8[2] = clon.ChildRemoved:Connect(function(p3)
+						if p3 == list.CD or not list.CD or not list.CD.Parent then
+							v31();
+						end;
+					end)
+				end
+				return _G.funcReturn
+			end
+			return oldnewindex(self, key, funcfor)
+		end
+		return oldnewindex(self, key, val)
+	end)
 	while not game:IsLoaded() do wait() end
 	--serverhop
-	function serverhop()
+	getgenv().serverhop = function()
 		placeId = game.PlaceId
 		function findTeleport()
 			local nextCursor;
@@ -43,56 +99,14 @@ if game.PlaceId == 2809202155 then
 			findTeleport()
 		end
 	end
-	--item handler
-		print('item handler0')
-		oldmeta = hookmetamethod(game,"__newindex",function(self, key, val)
-		if self.Name == 'ItemSpawn' and key == 'OnClientInvoke' then
-			print('item handler1')
-			_G.spawnFunc = val
-			print('item handler2')
-			_G.funcReturn = getconstants(val)[3]
-			print('item handler3')
-			u1 = {}
-			print('item handler4')
-			funcfor = function(arg1, list)
-				if not u1[list.CD] then
-					u1[list.CD] = true
-					--print('Item added',list.Replica)
-					local clon = list.Replica:Clone()
-					clon.Parent = game:GetService("Workspace")["Item_Spawns"].Items
-					clon.Base.CFrame = list.CFrame
-					list.CD.Parent = clon
-					local v30 = list.CD:Clone()
-					v30.Enabled = true
-					v30.Parent = clon
-					v30.Name = 'RightPrompt'
-					u8 = {}
-					u8[1] = v30.Triggered:Connect(function(p2)
-						list.CD.RemoteEvent:FireServer()
-					end)
-					local function v31()
-						if not u1[list.CD] then
-							return
-						end
-						u1[list.CD] = nil
-						if clon then
-							clon:Destroy()
-						end
-						if list.CD then
-							list.CD:Destroy()
-						end
-					end
-					u8[2] = clon.ChildRemoved:Connect(function(p3)
-						if p3 == list.CD or not list.CD or not list.CD.Parent then
-							v31();
-						end;
-					end)
-				end
-				return _G.funcReturn
+	--error handler
+	game:GetService('CoreGui').RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(child)
+		if child.Name == 'ErrorPrompt' then
+			if d.settings.debug then
+				print('error\ntype:kick/teleport fail')
 			end
-			return oldmeta(self, key, funcfor)
+			serverhop()
 		end
-		return oldmeta(self, key, val)
 	end)
 	--anti-tp bypass
 	local oldnamecall
@@ -110,7 +124,9 @@ if game.PlaceId == 2809202155 then
 		end
 		return oldnamecall(self, ...)
 	end)
-	print('anti-tp bypass loaded')
+	if d.settings.debug then
+		print('anti-tp bypass loaded')
+	end
 	--fps
 	game:GetService('RunService'):Set3dRenderingEnabled(d.settings.render)
 	if d.settings.fpsBoost then
@@ -139,7 +155,9 @@ if game.PlaceId == 2809202155 then
 	for i,v in pairs(getconnections(loading.MouseButton1Click)) do
 		v.Function()
 	end
-	print('loading skipped')
+	if d.settings.debug then
+		print('loading skipped')
+	end
 	task.wait(tonumber(d.settings.defaultTime))
 	while true do
 		for i,v in pairs(game:GetService("Players").LocalPlayer:WaitForChild('PlayerGui'):GetDescendants()) do
@@ -155,50 +173,73 @@ if game.PlaceId == 2809202155 then
 	for i,v in pairs(getconnections(playbtn.MouseButton1Click)) do
 		v.Function()
 	end
-	print('play skipped')
-	--error handler
-	game:GetService('CoreGui').RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(child)
-		if child.Name == 'ErrorPrompt' then
-			serverhop()
-		end
-	end)
+	if d.settings.debug then
+		print('play skipped')
+	end
+	local charset = {}
+	for i = 48,  57 do table.insert(charset, string.char(i)) end
+	for i = 65,  90 do table.insert(charset, string.char(i)) end
+	for i = 97, 122 do table.insert(charset, string.char(i)) end
+	local function randomname(length)
+	    if length > 0 then
+	        return randomname(length - 1) .. charset[math.random(#charset)]
+	    else
+	        return ""
+	    end
+	end
 	--loop
 	local players = game.Players
 	local player = players.LocalPlayer
+	local items = 0
 	task.spawn(function()
 		task.wait(tonumber(d.settings.serverTime))
 		getgenv().hop = true
 	end)
+	local collect = function(instance,log)
+		local base,prompt,name = instance:FindFirstChild('Base'),instance:FindFirstChild('RightPrompt'),randomname(5)
+		if instance.Parent then
+		    player.Character.HumanoidRootPart.CFrame = CFrame.new(base.Position) --teleport
+			if log then
+				print('teleported to:',instance.Name,name)
+			end
+			task.wait(.4) --chill
+			if player:DistanceFromCharacter(base.Position) < 20 then --if teleported
+				task.wait(.7)
+				fireproximityprompt(prompt) --collect
+				if log then
+					print('collected:',instance.Name,name)
+				end
+				task.wait(1.1) --chill
+				items -= 1
+			end
+		end
+	end
 	task.wait(tonumber(d.settings.defaultTime))
 	while task.wait() do --autofarm loop
-		local items2 = 0 --counter
 		for i,v in pairs(game.Workspace.Item_Spawns.Items:GetChildren()) do
 			for key,value in pairs(d.items) do
-				if v.Name == key and value then
-					items2 += 1
-					print('item found:',key)
-					local base,prompt = v:FindFirstChild('Base'),v:FindFirstChild('RightPrompt')
-					if v.Parent then
-					    	player.Character.HumanoidRootPart.CFrame = CFrame.new(base.Position)
-						print('teleported')
-						task.wait(tonumber(d.settings.defaultTime))
-						if player:DistanceFromCharacter(base.Position) < 10 then --if teleported
-							task.wait(tonumber(d.settings.defaultTime))
-							fireproximityprompt(prompt)
-							print('collected:',key)
-							task.wait(tonumber(d.settings.defaultTime))
-							items2 -= 1
-						end
+				if v.Name == key and value then --if item is right and item enabled
+					if d.settings.debug then
+						print('item found:',v.Name)
+					end
+					items += 1
+					if #v:GetChildren() < 4 then
+						collect(v,d.settings.debug)
 					end
 				end
 			end
 		end
-		if items2 < 1 and getgenv().hop then
-		print('all items collected')
+		if items < 1 and getgenv().hop then
+			if d.settings.debug then
+				print('all items collected')
+			end
 			if d.settings.serverHop then
-			print('changing server')
+				if d.settings.debug then
+					print('changing server')
+				end
 				serverhop()
 			end
+			player.Character.HumanoidRootPart.CFrame = CFrame.new(game.Workspace.Map.HeavenBarriers.HeavenWaterFloor.Position)
 			break
 		end
 	end
