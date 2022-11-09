@@ -140,7 +140,7 @@ if game.PlaceId == 2809202155 then
 		end;
 	end
 	--loading and play button --
-	task.wait(tonumber(d.settings.defaultTime))
+	task.wait(.2)
 	while true do
 		for i,v in pairs(game:GetService("Players").LocalPlayer:WaitForChild('PlayerGui'):GetDescendants()) do
 			if v.Name == 'TextButton' and v.Parent.Name == 'Skip' then
@@ -158,7 +158,7 @@ if game.PlaceId == 2809202155 then
 	if d.settings.debug then
 		print('loading skipped')
 	end
-	task.wait(tonumber(d.settings.defaultTime))
+	task.wait(.2)
 	while true do
 		for i,v in pairs(game:GetService("Players").LocalPlayer:WaitForChild('PlayerGui'):GetDescendants()) do
 			if v.Name == 'Play' and v.Parent.Name == 'LoadingScreen' then
@@ -214,7 +214,7 @@ if game.PlaceId == 2809202155 then
 			end
 		end
 	end
-	task.wait(tonumber(d.settings.defaultTime))
+	task.wait(5)
 	while task.wait() do --autofarm loop
 		for i,v in pairs(game.Workspace.Item_Spawns.Items:GetChildren()) do
 			for key,value in pairs(d.items) do
