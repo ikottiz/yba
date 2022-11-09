@@ -1,6 +1,6 @@
 # yba
-uh,farms candies,lucky arrows and other items
 
+farms items in yba.pls read guide before using script,following guide is only way to use this autofarm
 ---
 
 guide:
