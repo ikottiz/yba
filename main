@@ -233,14 +233,14 @@ if game.PlaceId == 2809202155 then
 			if d.settings.debug then
 				print('all items collected')
 			end
+			player.Character.HumanoidRootPart.CFrame = CFrame.new(game.Workspace.Map.HeavenBarriers.HeavenWaterFloor.Position)
 			if d.settings.serverHop then
 				if d.settings.debug then
 					print('changing server')
 				end
 				serverhop()
+				break
 			end
-			player.Character.HumanoidRootPart.CFrame = CFrame.new(game.Workspace.Map.HeavenBarriers.HeavenWaterFloor.Position)
-			break
 		end
 	end
 end
