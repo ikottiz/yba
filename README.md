@@ -15,10 +15,10 @@ script:
 getgenv().d = {
 	items = {
 		["Lucky Arrow"] = true,
-		["Red Candy"] = true,
-		["Yellow Candy"] = true,
-		["Blue Candy"] = true,
-		["Green Candy"] = true,
+		["Red Candy"] = false,
+		["Yellow Candy"] = false,
+		["Blue Candy"] = false,
+		["Green Candy"] = false,
 		["Rokakaka"] = false,
 		["Mysterious Arrow"] = false,
 		["Steel Ball"] = false,
@@ -35,6 +35,7 @@ getgenv().d = {
  		fpsBoost = true,
  		serverHop = true,
  		serverTime = '25',
+		wehook = '',
 		debug = true
  	}
 }
