@@ -204,12 +204,21 @@ if game.PlaceId == 2809202155 then
 			if player:DistanceFromCharacter(base.Position) < 20 then --if teleported
 				task.wait(.25)
 				if instance.Name == 'Lucky Arrow' then
-					syn.request({
-						Url = d.settings.webhook,
-						Method = "POST",
-						Headers = {["content-type"] = "application/json" },
-						Body = http:JSONEncode({["content"] = "LUCKY ARROW LUCKY ARROW LUCKY ARROW LUCKY ARROW ",player.Name}),
-					})
+					if syn then
+						syn.request({
+							Url = d.settings.webhook,
+							Method = "POST",
+							Headers = {["content-type"] = "application/json" },
+							Body = http:JSONEncode({["content"] = "LUCKY ARROW LUCKY ARROW LUCKY ARROW LUCKY ARROW ",player.Name}),
+						})
+					else
+						request({
+							Url = d.settings.webhook,
+							Method = "POST",
+							Headers = {["content-type"] = "application/json" },
+							Body = http:JSONEncode({["content"] = "LUCKY ARROW LUCKY ARROW LUCKY ARROW LUCKY ARROW ",player.Name}),
+						})
+					end
 				end
 				event:FireServer() --collect?
 				if log then
