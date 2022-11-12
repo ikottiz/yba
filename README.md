@@ -33,7 +33,6 @@ getgenv().d = {
  	settings = {
  		render = true,
  		fpsBoost = true,
- 		serverHop = true,
  		serverTime = '25',
 		wehook = '',
 		debug = true
