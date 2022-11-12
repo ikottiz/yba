@@ -4,15 +4,17 @@ if game.PlaceId == 2809202155 then
 	oldnewindex = hookmetamethod(game,"__newindex",function(self, key, val)
 		if self.Name == 'ItemSpawn' and key == 'OnClientInvoke' then
 			if d.settings.debug then
-				print('hook started')
+				game.StarterGui:SetCore("SendNotification",{Title = "DEBUG",Text = "[+]hook",Duration = 2})
 			end
 			_G.spawnFunc = val
 			if d.settings.debug then
-				print('spawn function defined')
+				game.StarterGui:SetCore("SendNotification",{Title = "DEBUG",Text = "[+]spawn",Duration = 2})
 			end
 			_G.funcReturn = getconstants(val)[3]
 			if d.settings.debug then
-				print('return function defined')
+				game.StarterGui:SetCore("SendNotification",{Title = "DEBUG",Text = "[+]return",Duration = 2})
+				task.wait(.1)
+				game.StarterGui:SetCore("SendNotification",{Title = "DEBUG",Text = "ok lets go",Duration = 2})
 			end
 			u1 = {}
 			funcfor = function(arg1, list)
@@ -103,7 +105,7 @@ if game.PlaceId == 2809202155 then
 	game:GetService('CoreGui').RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(child)
 		if child.Name == 'ErrorPrompt' then
 			if d.settings.debug then
-				print('error\ntype:kick/teleport fail')
+				game.StarterGui:SetCore("SendNotification",{Title = "DEBUG",Text = "Error prompt catched,rip bozo",Duration = 2})
 			end
 			serverhop()
 		end
@@ -112,20 +114,14 @@ if game.PlaceId == 2809202155 then
 	local oldnamecall
 	oldnamecall = hookmetamethod(game,"__namecall",function(self, ...)
 		local args = {...}
-		if string.lower(tostring(self.Name)) == "returner" and args[1] == "idklolbrah2de" then
-			return "  ___XP DE KEY"		
-		elseif string.lower(tostring(self.Name)) == "remote event" then
-			if args[1] == "Reset" then
-				return nil
-			end
-			if args[2] == "Enum.HumanoidStateType.PlatformStanding" then
-				return nil
-			end
+		local method = getnamecallmethod()
+		if tostring(self) == "Returner" and tostring(method) == "InvokeServer" then
+			return "  ___XP DE KEY"
 		end
 		return oldnamecall(self, ...)
 	end)
-	if d.settings.debug then
-		print('anti-tp bypass loaded')
+	if d.settings.debug then 
+		game.StarterGui:SetCore("SendNotification",{Title = "DEBUG",Text = "Anti tp bypass",Duration = 2})
 	end
 	--fps
 	game:GetService('RunService'):Set3dRenderingEnabled(d.settings.render)
@@ -140,7 +136,7 @@ if game.PlaceId == 2809202155 then
 		end;
 	end
 	--loading and play button --
-	task.wait(.2)
+	task.wait(1)
 	while true do
 		for i,v in pairs(game:GetService("Players").LocalPlayer:WaitForChild('PlayerGui'):GetDescendants()) do
 			if v.Name == 'TextButton' and v.Parent.Name == 'Skip' then
@@ -156,7 +152,7 @@ if game.PlaceId == 2809202155 then
 		v.Function()
 	end
 	if d.settings.debug then
-		print('loading skipped')
+		game.StarterGui:SetCore("SendNotification",{Title = "DEBUG",Text = "Loading skipped",Duration = 2})
 	end
 	task.wait(.2)
 	while true do
@@ -174,7 +170,7 @@ if game.PlaceId == 2809202155 then
 		v.Function()
 	end
 	if d.settings.debug then
-		print('play skipped')
+		game.StarterGui:SetCore("SendNotification",{Title = "DEBUG",Text = "Play skipped",Duration = 2})
 	end
 	local charset = {}
 	for i = 48,  57 do table.insert(charset, string.char(i)) end
@@ -195,52 +191,54 @@ if game.PlaceId == 2809202155 then
 		task.wait(tonumber(d.settings.serverTime))
 		getgenv().hop = true
 	end)
+	player.Character.HumanoidRootPart.CFrame = CFrame.new(-3.9087300300598145, -33.2359733581543, 30.26110076904297)
+	task.wait(0.3)
 	local collect = function(instance,log)
-		local base,prompt,name = instance:FindFirstChild('Base'),instance:FindFirstChild('RightPrompt'),randomname(5)
-		if instance.Parent then
+		local base,prompt,event,name = instance:FindFirstChild('Base'),instance:FindFirstChild('RightPrompt'),prompt:FindFirstChild("RemoteEvent"),randomname(5)
+		if instance.Parent and prompt.Parent ~= nil and prompt.MaxActivationDistance ~= 0 then
 		    player.Character.HumanoidRootPart.CFrame = CFrame.new(base.Position) --teleport
 			if log then
-				print('teleported to:',instance.Name,name)
+				game.StarterGui:SetCore("SendNotification",{Title = "DEBUG",Text = "Teleported to:"..tostring(instance.Name,name),Duration = 2})
 			end
-			task.wait(.4) --chill
+			task.wait(.35) --chill
 			if player:DistanceFromCharacter(base.Position) < 20 then --if teleported
-				task.wait(.7)
-				fireproximityprompt(prompt) --collect
-				if log then
-					print('collected:',instance.Name,name)
+				task.wait(.25)
+				if instance.Name == 'Lucky Arrow' then
+					syn.request({
+						Url = d.settings.webhook,
+						Method = "POST",
+						Headers = {["content-type"] = "application/json" },
+						Body = http:JSONEncode({["content"] = "LUCKY ARROW LUCKY ARROW LUCKY ARROW LUCKY ARROW ",player.Name}),
+					})
 				end
-				task.wait(1.1) --chill
+				event:FireServer() --collect?
+				if log then
+					game.StarterGui:SetCore("SendNotification",{Title = "DEBUG:",Text = "Collected:"..tostring(instance.Name,name),Duration = 2})
+				end
 				items -= 1
 			end
 		end
 	end
-	task.wait(5)
+	task.wait(tonumber(d.settings.defaultTime))
 	while task.wait() do --autofarm loop
 		for i,v in pairs(game.Workspace.Item_Spawns.Items:GetChildren()) do
 			for key,value in pairs(d.items) do
 				if v.Name == key and value then --if item is right and item enabled
 					if d.settings.debug then
-						print('item found:',v.Name)
+						game.StarterGui:SetCore("SendNotification",{Title = "DEBUG",Text = "Item Found:"..tostring(v.Name),Duration = 2})
 					end
 					items += 1
-					if #v:GetChildren() < 4 then
-						collect(v,d.settings.debug)
-					end
+					collect(v,d.settings.debug)
 				end
 			end
 		end
 		if items < 1 and getgenv().hop then
 			if d.settings.debug then
-				print('all items collected')
+				game.StarterGui:SetCore("SendNotification",{Title = "DEBUG",Text = "All items collected\nChanging server",Duration = 5})
 			end
-			player.Character.HumanoidRootPart.CFrame = CFrame.new(game.Workspace.Map.HeavenBarriers.HeavenWaterFloor.Position)
-			if d.settings.serverHop then
-				if d.settings.debug then
-					print('changing server')
-				end
-				serverhop()
-				break
-			end
+			serverhop()
+			player.Character.HumanoidRootPart.CFrame = CFrame.new(-3.9087300300598145, -33.2359733581543, 30.26110076904297)
+			break
 		end
 	end
 end
