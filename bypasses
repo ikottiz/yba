@@ -1,0 +1,55 @@
+local oldnewindex
+oldnewindex = hookmetamethod(game,"__newindex",function(self, key, val)
+    if self.Name == 'ItemSpawn' and key == 'OnClientInvoke' then
+        _G.spawnFunc = val
+        _G.funcReturn = getconstants(val)[3]
+        local u1 = {}
+        local funcfor = function(arg1, list)
+            if not u1[list.CD] then
+                u1[list.CD] = true
+                local clon = list.Replica:Clone()
+                clon.Parent = workspace["Item_Spawns"].Items
+                clon.Base.CFrame = list.CFrame
+                list.CD.Parent = clon
+                local v30 = list.CD:Clone()
+                v30.Enabled = true
+                v30.Parent = clon
+                v30.Name = 'RightPrompt' --for gods sake
+                local u8 = {}
+                u8[1] = v30.Triggered:Connect(function(p2)
+                    list.CD.RemoteEvent:FireServer() --pick up remote
+                end)
+                local function v31()
+                    if not u1[list.CD] then
+                        return
+                    end
+                    u1[list.CD] = nil
+                    if clon then
+                        clon:Destroy()
+                    end
+                    if list.CD then
+                        list.CD:Destroy()
+                    end
+                end
+                u8[2] = clon.ChildRemoved:Connect(function(p3)
+                    if p3 == list.CD or not list.CD or not list.CD.Parent then
+                        v31();
+                    end;
+                end)
+            end
+            return _G.funcReturn
+        end
+        return oldnewindex(self, key, funcfor)
+    end
+    return oldnewindex(self, key, val)
+end)
+--anti-tp bypass
+local oldnamecall
+oldnamecall = hookmetamethod(game,"__namecall",function(self, ...)
+    local args = {...}
+    local method = getnamecallmethod()
+    if tostring(self) == "Returner" and tostring(method) == "InvokeServer" then --remote that fires when you teleports
+        return "  ___XP DE KEY"
+    end
+    return oldnamecall(self, ...)
+end)
