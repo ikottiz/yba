@@ -1,5 +1,7 @@
 
 if game.PlaceId == 2809202155 then
+	--scriptware,krnl idk support
+	local request = http_request or request or httprequest
 	--disable 3d render
 	game:GetService('RunService'):Set3dRenderingEnabled(render)
 	--bypasses
@@ -73,7 +75,7 @@ if game.PlaceId == 2809202155 then
 	--starting
 	game.Players.LocalPlayer:WaitForChild('PlayerGui').DescendantRemoving:Connect(function(d)
 		if d.Name == 'LoadingScreen1' then
-            syn.request({
+            request({
                 Url = settings.logsWebhook,
                 Method = "POST",
                 Headers = {["content-type"] = "application/json" },
@@ -140,7 +142,7 @@ if game.PlaceId == 2809202155 then
 				if property == 'Visible' then
 					wait(.5)
 					if string.match(string.lower(child.Text),'arrow') then
-						syn.request({
+						request({
 							Url = "settings.farmWebhook",
 							Method = "POST",
 							Headers = {["content-type"] = "application/json" },
