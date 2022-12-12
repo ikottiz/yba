@@ -1,6 +1,6 @@
 # yba
 
-farms items in yba.pls read guide before using script,following guide is only way to use this autofarm
+lucky arrow farm,open-source, feel free to fork,open issues pull requests and something
 ---
 
 guide:
@@ -12,31 +12,11 @@ by ikottiz#4863 and Не о6язан#3965
 -
 script:
 ```lua
-getgenv().d = {
-	items = {
-		["Lucky Arrow"] = true,
-		["Red Candy"] = false,
-		["Yellow Candy"] = false,
-		["Blue Candy"] = false,
-		["Green Candy"] = false,
-		["Rokakaka"] = false,
-		["Mysterious Arrow"] = false,
-		["Steel Ball"] = false,
-		["Gold Coin"] = false,
-		["Rib Cage of The Saint's Corpse"] = false,
-		["Quinton's Glove"] = false,
-		["Zepellin's Headband"] = false,
-		["Diamond"] = false,
-		["Stone Mask"] = false,
-		["Ancient Scroll"] = false,
- 	},
- 	settings = {
- 		render = true,
- 		fpsBoost = true,
- 		serverTime = '25',
-		wehook = '',
-		debug = true
- 	}
+local settings = {
+   farmWebhook = '', --notifier webhook
+   logsWebhook = '', --serverhop webhook
+   serverTime = 25, --how much seconds bot will be on server
+   render = true,
 }
 loadstring(game:HttpGet('https://raw.githubusercontent.com/ikottiz/yba/main/main'))()
 ```
