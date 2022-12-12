@@ -1,65 +1,13 @@
+
 if game.PlaceId == 2809202155 then
-	--item handler
-	local oldnewindex
-	oldnewindex = hookmetamethod(game,"__newindex",function(self, key, val)
-		if self.Name == 'ItemSpawn' and key == 'OnClientInvoke' then
-			if d.settings.debug then
-				game.StarterGui:SetCore("SendNotification",{Title = "DEBUG",Text = "[+]hook",Duration = 2})
-			end
-			_G.spawnFunc = val
-			if d.settings.debug then
-				game.StarterGui:SetCore("SendNotification",{Title = "DEBUG",Text = "[+]spawn",Duration = 2})
-			end
-			_G.funcReturn = getconstants(val)[3]
-			if d.settings.debug then
-				game.StarterGui:SetCore("SendNotification",{Title = "DEBUG",Text = "[+]return",Duration = 2})
-				task.wait(.1)
-				game.StarterGui:SetCore("SendNotification",{Title = "DEBUG",Text = "ok lets go",Duration = 2})
-			end
-			u1 = {}
-			funcfor = function(arg1, list)
-				if not u1[list.CD] then
-					u1[list.CD] = true
-					--print('Item added',list.Replica)
-					local clon = list.Replica:Clone()
-					clon.Parent = game:GetService("Workspace")["Item_Spawns"].Items
-					clon.Base.CFrame = list.CFrame
-					list.CD.Parent = clon
-					local v30 = list.CD:Clone()
-					v30.Enabled = true
-					v30.Parent = clon
-					v30.Name = 'RightPrompt'
-					u8 = {}
-					u8[1] = v30.Triggered:Connect(function(p2)
-						list.CD.RemoteEvent:FireServer()
-					end)
-					local function v31()
-						if not u1[list.CD] then
-							return
-						end
-						u1[list.CD] = nil
-						if clon then
-							clon:Destroy()
-						end
-						if list.CD then
-							list.CD:Destroy()
-						end
-					end
-					u8[2] = clon.ChildRemoved:Connect(function(p3)
-						if p3 == list.CD or not list.CD or not list.CD.Parent then
-							v31();
-						end;
-					end)
-				end
-				return _G.funcReturn
-			end
-			return oldnewindex(self, key, funcfor)
-		end
-		return oldnewindex(self, key, val)
-	end)
+	--disable 3d render
+	game:GetService('RunService'):Set3dRenderingEnabled(render)
+	--bypasses
+	loadstring(game:HttpGet('https://raw.githubusercontent.com/ikottiz/yba/main/bypasses'))()
+	--cuh
 	while not game:IsLoaded() do wait() end
 	--serverhop
-	getgenv().serverhop = function()
+	function serverhop()
 		placeId = game.PlaceId
 		function findTeleport()
 			local nextCursor;
@@ -88,7 +36,7 @@ if game.PlaceId == 2809202155 then
 				end
 			end
 		end
-
+	
 		oldServers = game:GetService('TeleportService'):GetLocalPlayerTeleportData() or {}
 		oldServers[game.JobId] = true
 		findTeleport()
@@ -101,152 +49,144 @@ if game.PlaceId == 2809202155 then
 			findTeleport()
 		end
 	end
-	--error handler
+	--collect function
+	function collect(instance)
+		local base,prompt = instance:FindFirstChild('Base'),instance:FindFirstChild('RightPrompt')
+		if instance.Parent and prompt.Parent ~= nil and prompt.MaxActivationDistance ~= 0 then
+			game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(base.Position) --teleport
+			wait(.5)
+			if game.Players.LocalPlayer:DistanceFromCharacter(base.Position) < 20 then --if teleported
+				fireproximityprompt(prompt)
+			end
+		end
+	end
+	--getarrows
+	function getArrows()
+		local arrows = 0
+		for i,v in ipairs(player.Backpack:GetChildren()) do
+			if v.Name == 'Lucky Arrow' then
+				arrows = arrows + 1
+			end
+		end
+		return tostring(arrows)
+	end
+	--starting
+	game.Players.LocalPlayer:WaitForChild('PlayerGui').DescendantRemoving:Connect(function(d)
+		if d.Name == 'LoadingScreen1' then
+            syn.request({
+                Url = settings.logsWebhook,
+                Method = "POST",
+                Headers = {["content-type"] = "application/json" },
+                Body = game:GetService('HttpService'):JSONEncode({
+                    ["content"] = "",
+                    ["embeds"] = {{
+                        ["title"] = '**Logs**',
+                        ["description"] = "",
+                        ["type"] = "rich",
+                        ["color"] = tonumber(0xA1C3A9),
+                        ["fields"] = {
+                            {
+                                ["name"] = "Account:",
+                                ["value"] = game.Players.LocalPlayer.Name,
+                                ["inline"] = false
+                            },
+                            {
+                                ["name"] = "Arrows:",
+                                ["value"] = getArrows(),
+                                ["inline"] = false
+                            },
+							{
+								["name"] = "Players:",
+								["value"]= #game:GetService("Players"):GetPlayers(),
+								["inline"] = false,
+							},
+                        },
+                    }}
+                })
+            })
+		end
+	end)
+	--error handler,server hop on kick or teleport failure
 	game:GetService('CoreGui').RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(child)
 		if child.Name == 'ErrorPrompt' then
-			if d.settings.debug then
-				game.StarterGui:SetCore("SendNotification",{Title = "DEBUG",Text = "Error prompt catched,rip bozo",Duration = 2})
-			end
 			serverhop()
 		end
 	end)
-	--anti-tp bypass
-	local oldnamecall
-	oldnamecall = hookmetamethod(game,"__namecall",function(self, ...)
-		local args = {...}
-		local method = getnamecallmethod()
-		if tostring(self) == "Returner" and tostring(method) == "InvokeServer" then
-			return "  ___XP DE KEY"
-		end
-		return oldnamecall(self, ...)
-	end)
-	if d.settings.debug then 
-		game.StarterGui:SetCore("SendNotification",{Title = "DEBUG",Text = "Anti tp bypass",Duration = 2})
+	--skip loading
+	local loadbtn,playbtn
+	local m1 = function(path)
+		for i,v in pairs(getconnections(path.MouseButton1Click)) do v.Function() end
 	end
-	--fps
-	game:GetService('RunService'):Set3dRenderingEnabled(d.settings.render)
-	if d.settings.fpsBoost then
-		for _,v in pairs(game:GetService("Workspace"):GetDescendants()) do
-			if v:IsA("BasePart") and not v.Parent:FindFirstChild("Humanoid") then
-				v.Material = Enum.Material.SmoothPlastic;
-				if v:IsA("Texture") then
-					v:Destroy();
-				end 
-			end;		
-		end;
-	end
-	--loading and play button --
-	task.wait(1)
 	while true do
 		for i,v in pairs(game:GetService("Players").LocalPlayer:WaitForChild('PlayerGui'):GetDescendants()) do
 			if v.Name == 'TextButton' and v.Parent.Name == 'Skip' then
-				loading = v
-			end
-		end
-		if loading then
-			break
-		end
-	end
-	while #getconnections(loading.MouseButton1Click) == 0 do wait() end
-	for i,v in pairs(getconnections(loading.MouseButton1Click)) do
-		v.Function()
-	end
-	if d.settings.debug then
-		game.StarterGui:SetCore("SendNotification",{Title = "DEBUG",Text = "Loading skipped",Duration = 2})
-	end
-	task.wait(.2)
-	while true do
-		for i,v in pairs(game:GetService("Players").LocalPlayer:WaitForChild('PlayerGui'):GetDescendants()) do
-			if v.Name == 'Play' and v.Parent.Name == 'LoadingScreen' then
+				loadbtn = v
+			elseif v.Name == 'Play' and v.Parent.Name == 'LoadingScreen' then
 				playbtn = v
 			end
 		end
-		if playbtn then
+		if loadbtn and playbtn then
 			break
 		end
 	end
+	while #getconnections(loadbtn.MouseButton1Click) == 0 do wait() end
+	m1(loadbtn)
+	wait(.2)
 	while #getconnections(playbtn.MouseButton1Click) == 0 do wait() end
-	for i,v in pairs(getconnections(playbtn.MouseButton1Click)) do
-		v.Function()
-	end
-	if d.settings.debug then
-		game.StarterGui:SetCore("SendNotification",{Title = "DEBUG",Text = "Play skipped",Duration = 2})
-	end
-	local charset = {}
-	for i = 48,  57 do table.insert(charset, string.char(i)) end
-	for i = 65,  90 do table.insert(charset, string.char(i)) end
-	for i = 97, 122 do table.insert(charset, string.char(i)) end
-	local function randomname(length)
-	    if length > 0 then
-	        return randomname(length - 1) .. charset[math.random(#charset)]
-	    else
-	        return ""
-	    end
-	end
-	--loop
-	local players = game.Players
-	local player = players.LocalPlayer
-	local items = 0
-	task.spawn(function()
-		task.wait(tonumber(d.settings.serverTime))
-		getgenv().hop = true
-	end)
-	player.Character.HumanoidRootPart.CFrame = CFrame.new(-3.9087300300598145, -33.2359733581543, 30.26110076904297)
-	task.wait(0.3)
-	local collect = function(instance,log)
-		local base,prompt,event,name = instance:FindFirstChild('Base'),instance:FindFirstChild('RightPrompt'),prompt:FindFirstChild("RemoteEvent"),randomname(5)
-		if instance.Parent and prompt.Parent ~= nil and prompt.MaxActivationDistance ~= 0 then
-		    player.Character.HumanoidRootPart.CFrame = CFrame.new(base.Position) --teleport
-			if log then
-				game.StarterGui:SetCore("SendNotification",{Title = "DEBUG",Text = "Teleported to:"..tostring(instance.Name,name),Duration = 2})
-			end
-			task.wait(.35) --chill
-			if player:DistanceFromCharacter(base.Position) < 20 then --if teleported
-				task.wait(.25)
-				if instance.Name == 'Lucky Arrow' then
-					if syn then
+	m1(playbtn)	
+	game:GetService("Players").LocalPlayer.PlayerGui:WaitForChild('HUD'):WaitForChild('Main'):WaitForChild('DropMoney'):WaitForChild('Money').ChildAdded:Connect(function(child)
+		if child.Name == 'Template' then
+			child.Changed:Connect(function(property)
+				if property == 'Visible' then
+					wait(.5)
+					if string.match(string.lower(child.Text),'arrow') then
 						syn.request({
-							Url = d.settings.webhook,
+							Url = "settings.farmWebhook",
 							Method = "POST",
 							Headers = {["content-type"] = "application/json" },
-							Body = http:JSONEncode({["content"] = "LUCKY ARROW LUCKY ARROW LUCKY ARROW LUCKY ARROW ",player.Name}),
-						})
-					else
-						request({
-							Url = d.settings.webhook,
-							Method = "POST",
-							Headers = {["content-type"] = "application/json" },
-							Body = http:JSONEncode({["content"] = "LUCKY ARROW LUCKY ARROW LUCKY ARROW LUCKY ARROW ",player.Name}),
+							Body = game:GetService('HttpService'):JSONEncode({
+								["content"] = "",
+								["embeds"] = {{
+									["title"] = "**Lucky Arrow found!**",
+									["description"] = "",
+									["type"] = "rich",
+									["color"] = tonumber(0x00AB2B),
+									["fields"] = {
+										{
+											["name"] = "Account:",
+											["value"] = game:GetService("Players").LocalPlayer.Name,
+											["inline"] = false
+										},
+										{
+											["name"] = "Arrows:",
+											["value"] = getArrows(),
+											["inline"] = false
+										},
+										{
+										["name"] = "Players:",
+										["value"]= #game:GetService("Players"):GetPlayers(),
+										["inline"] = false,
+										},
+									},
+								}}
+							})
 						})
 					end
 				end
-				event:FireServer() --collect?
-				if log then
-					game.StarterGui:SetCore("SendNotification",{Title = "DEBUG:",Text = "Collected:"..tostring(instance.Name,name),Duration = 2})
-				end
-				items -= 1
+			end)
+		end
+	end)
+	--loop
+	local counter = 0
+	while wait(5) do
+		for i,v in ipairs(game.Workspace.Item_Spawns.Items:GetChildren()) do
+			if v.Name == 'Lucky Arrow' then
+				collect(v)
 			end
 		end
-	end
-	task.wait(2)
-	while task.wait() do --autofarm loop
-		for i,v in pairs(game.Workspace.Item_Spawns.Items:GetChildren()) do
-			for key,value in pairs(d.items) do
-				if v.Name == key and value then --if item is right and item enabled
-					if d.settings.debug then
-						game.StarterGui:SetCore("SendNotification",{Title = "DEBUG",Text = "Item Found:"..tostring(v.Name),Duration = 2})
-					end
-					items += 1
-					collect(v,d.settings.debug)
-				end
-			end
-		end
-		if items < 1 and getgenv().hop then
-			if d.settings.debug then
-				game.StarterGui:SetCore("SendNotification",{Title = "DEBUG",Text = "All items collected\nChanging server",Duration = 5})
-			end
+		counter = counter + 1
+		if counter == settings.serverTime / 5 then
 			serverhop()
-			player.Character.HumanoidRootPart.CFrame = CFrame.new(-3.9087300300598145, -33.2359733581543, 30.26110076904297)
 			break
 		end
 	end
