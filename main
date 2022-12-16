@@ -114,28 +114,7 @@ if game.PlaceId == 2809202155 then
 			serverhop()
 		end
 	end)
-	--skip loading
-	local loadbtn,playbtn
-	local m1 = function(path)
-		for i,v in pairs(getconnections(path.MouseButton1Click)) do v.Function() end
-	end
-	while true do
-		for i,v in pairs(game:GetService("Players").LocalPlayer:WaitForChild('PlayerGui'):GetDescendants()) do
-			if v.Name == 'TextButton' and v.Parent.Name == 'Skip' then
-				loadbtn = v
-			elseif v.Name == 'Play' and v.Parent.Name == 'LoadingScreen' then
-				playbtn = v
-			end
-		end
-		if loadbtn and playbtn then
-			break
-		end
-	end
-	while #getconnections(loadbtn.MouseButton1Click) == 0 do wait() end
-	m1(loadbtn)
-	wait(.2)
-	while #getconnections(playbtn.MouseButton1Click) == 0 do wait() end
-	m1(playbtn)	
+	--loadstring(game:HttpGet(''))()
 	game.Players.LocalPlayer.Backpack.ChildAdded:Connect(function(child)
 		if child.Name == 'Lucky Arrow' then
 			request({
