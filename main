@@ -151,11 +151,18 @@ if game.PlaceId == 2809202155 then
 	end)
 	--loop
 	local counter = 0
+	local temp = true
 	while wait(5) do
-		for i,v in ipairs(game.Workspace.Item_Spawns.Items:GetChildren()) do
-			if v.Name == 'Lucky Arrow' then
-				collect(v)
-			end
+		while wait() do
+			if temp then
+				for i,v in ipairs(game.Workspace.Item_Spawns.Items:GetChildren()) do
+					if v.Name == 'Lucky Arrow' then
+						collect(v)
+					end
+				end
+			else
+				break
+			end 
 		end
 		counter = counter + 1
 		if counter == settings.serverTime / 5 then
