@@ -136,46 +136,39 @@ if game.PlaceId == 2809202155 then
 	wait(.2)
 	while #getconnections(playbtn.MouseButton1Click) == 0 do wait() end
 	m1(playbtn)	
-	game:GetService("Players").LocalPlayer.PlayerGui:WaitForChild('HUD'):WaitForChild('Main'):WaitForChild('DropMoney'):WaitForChild('Money').ChildAdded:Connect(function(child)
-		if child.Name == 'Template' then
-			child.Changed:Connect(function(property)
-				if property == 'Visible' then
-					wait(.5)
-					if string.match(string.lower(child.Text),'arrow') then
-						request({
-							Url = "settings.farmWebhook",
-							Method = "POST",
-							Headers = {["content-type"] = "application/json" },
-							Body = game:GetService('HttpService'):JSONEncode({
-								["content"] = "",
-								["embeds"] = {{
-									["title"] = "**Lucky Arrow found!**",
-									["description"] = "",
-									["type"] = "rich",
-									["color"] = tonumber(0x00AB2B),
-									["fields"] = {
-										{
-											["name"] = "Account:",
-											["value"] = game:GetService("Players").LocalPlayer.Name,
-											["inline"] = false
-										},
-										{
-											["name"] = "Arrows:",
-											["value"] = getArrows(),
-											["inline"] = false
-										},
-										{
-										["name"] = "Players:",
-										["value"]= #game:GetService("Players"):GetPlayers(),
-										["inline"] = false,
-										},
-									},
-								}}
-							})
-						})
-					end
-				end
-			end)
+	game.Players.LocalPlayer.Backpack.ChildAdded:Connect(function(child)
+		if child.Name == 'Lucky Arrow' then
+			request({
+				Url = settings.farmWebhook,
+				Method = "POST",
+				Headers = {["content-type"] = "application/json" },
+				Body = game:GetService('HttpService'):JSONEncode({
+					["content"] = "",
+					["embeds"] = {{
+						["title"] = "**Lucky Arrow found!**",
+						["description"] = "",
+						["type"] = "rich",
+						["color"] = tonumber(0x00AB2B),
+						["fields"] = {
+							{
+								["name"] = "Account:",
+								["value"] = game:GetService("Players").LocalPlayer.Name,
+								["inline"] = false
+							},
+							{
+								["name"] = "Arrows:",
+								["value"] = getArrows(),
+								["inline"] = false
+							},
+							{
+								["name"] = "Players:",
+								["value"]= #game:GetService("Players"):GetPlayers(),
+								["inline"] = false,
+							},
+						},
+			    		}}
+				})
+		    	})
 		end
 	end)
 	--loop
