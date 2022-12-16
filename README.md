@@ -8,7 +8,7 @@ guide:
 - 2.Put script into file and change settings if you want
 - 3.Voilà!
 
-by ikottiz#4863 and Не о6язан#3965
+by ikottiz#4863,Не о6язан#3965,roblox dev forum examples
 -
 script:
 ```lua
