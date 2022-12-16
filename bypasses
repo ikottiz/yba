@@ -1,3 +1,4 @@
+--item spawn
 local oldnewindex
 oldnewindex = hookmetamethod(game,"__newindex",function(self, key, val)
     if self.Name == 'ItemSpawn' and key == 'OnClientInvoke' then
@@ -53,3 +54,26 @@ oldnamecall = hookmetamethod(game,"__namecall",function(self, ...)
     end
     return oldnamecall(self, ...)
 end)
+while not game:IsLoaded() do wait() end
+--loading skip
+local loadbtn,playbtn
+local m1 = function(path)
+    for i,v in pairs(getconnections(path.MouseButton1Click)) do v.Function() end
+end
+while true do
+    for i,v in pairs(game:GetService("Players").LocalPlayer:WaitForChild('PlayerGui'):GetDescendants()) do
+        if v.Name == 'TextButton' and v.Parent.Name == 'Skip' then
+            loadbtn = v
+        elseif v.Name == 'Play' and v.Parent.Name == 'LoadingScreen' then
+            playbtn = v
+        end
+    end
+    if loadbtn and playbtn then
+        break
+    end
+end
+while #getconnections(loadbtn.MouseButton1Click) == 0 do wait() end
+m1(loadbtn)
+wait(.2)
+while #getconnections(playbtn.MouseButton1Click) == 0 do wait() end
+m1(playbtn)	
