@@ -1,9 +1,9 @@
-# yba
+# YBA Autofarm
 
 lucky arrow farm,open-source, feel free to fork,open issues pull requests and something
 ---
 
-guide:
+how to use:
 - 1.Create empty file in your 'autoexec' folder
 - 2.Put script into file and change settings if you want
 - 3.Voilà!
