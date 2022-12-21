@@ -16,7 +16,7 @@ local settings = {
    farmWebhook = '', --notifier webhook
    logsWebhook = '', --serverhop webhook
    serverTime = 25, --how much seconds bot will be on server
-   render = true,
+   render = true, --enables/disables 3d rendering
 }
 loadstring(game:HttpGet('https://raw.githubusercontent.com/ikottiz/yba/main/main'))()
 ```
