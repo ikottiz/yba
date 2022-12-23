@@ -17,6 +17,7 @@ local settings = {
    logsWebhook = '', --serverhop webhook
    serverTime = 25, --how much seconds bot will be on server
    render = true, --enables/disables 3d rendering
+   fpscap = 7
 }
 loadstring(game:HttpGet('https://raw.githubusercontent.com/ikottiz/yba/main/main'))()
 ```
