@@ -1,4 +1,3 @@
-
 if game.PlaceId == 2809202155 then
 	--disable 3d render
 	game:GetService('RunService'):Set3dRenderingEnabled(dic.render)
@@ -115,49 +114,57 @@ if game.PlaceId == 2809202155 then
 		end
 	end)
 	game.Players.LocalPlayer.Backpack.ChildAdded:Connect(function(child)
-		if child.Name == 'Lucky Arrow' then
-			syn.request({
-				Url = dic.farmWebhook,
-				Method = "POST",
-				Headers = {["content-type"] = "application/json" },
-				Body = game:GetService('HttpService'):JSONEncode({
-					["content"] = "",
-					["embeds"] = {{
-						["title"] = "**Lucky Arrow found!**",
-						["description"] = "",
-						["type"] = "rich",
-						["color"] = tonumber(0x00AB2B),
-						["fields"] = {
-							{
-								["name"] = "Account:",
-								["value"] = game:GetService("Players").LocalPlayer.Name,
-								["inline"] = false
-							},
-							{
-								["name"] = "Arrows:",
-								["value"] = getArrows(),
-								["inline"] = false
-							},
-							{
-								["name"] = "Players:",
-								["value"]= #game:GetService("Players"):GetPlayers(),
-								["inline"] = false,
-							},
-						},
-			    		}}
-				})
-		    	})
-		end
+        for k, item in pairs(dic.items) do
+            if child.Name == k and item then
+                syn.request({
+                    Url = dic.farmWebhook,
+                    Method = "POST",
+                    Headers = {["content-type"] = "application/json" },
+                    Body = game:GetService('HttpService'):JSONEncode({
+                        ["content"] = "",
+                        ["embeds"] = {{
+                            ["title"] = "**"..child.Name.." found!**",
+                            ["description"] = "",
+                            ["type"] = "rich",
+                            ["color"] = tonumber(0x00AB2B),
+                            ["fields"] = {
+                                {
+                                    ["name"] = "Account:",
+                                    ["value"] = game:GetService("Players").LocalPlayer.Name,
+                                    ["inline"] = false
+                                },
+                                {
+                                    ["name"] = "Arrows:",
+                                    ["value"] = getArrows(),
+                                    ["inline"] = false
+                                },
+                                {
+                                    ["name"] = "Players:",
+                                    ["value"]= #game:GetService("Players"):GetPlayers(),
+                                    ["inline"] = false,
+                                },
+                            },
+                            }}
+                    })
+                    })
+            end
+        end
 	end)
-	--loop
-	local counter = 0
+	--loop   
 	while wait() do
-		for i,v in ipairs(game.Workspace.Item_Spawns.Items:GetChildren()) do
-			for k,v2 in ipairs(dic.items) do
-				if v.Name == k and v2 then
-					collect(v)
-				end
-			end
-		end
+        for _,v in ipairs(game.Workspace.Item_Spawns.Items:GetChildren()) do
+            hop = true
+            for _,itemName in ipairs(dic.items) do
+                if v.Parent:FindFirstChild(itemName) then
+                    hop = false
+                end
+                if v.Name == itemName then
+                    collect(v)
+                end
+            end
+            if hop then
+                serverhop()
+            end
+        end
 	end
 end
