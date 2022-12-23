@@ -12,7 +12,7 @@ by ikottiz#4863,Не о6язан#3965,roblox dev forum examples
 -
 script:
 ```lua
-local dic = {
+getgenv().dic = {
    farmWebhook = '', --notifier webhook
    logsWebhook = '', --serverhop webhook
    serverTime = 25, --how much seconds bot will be on server
