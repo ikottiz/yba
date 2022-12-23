@@ -4,6 +4,7 @@ if game.PlaceId == 2809202155 then
 	local request = http_request or request or httprequest
 	--disable 3d render
 	game:GetService('RunService'):Set3dRenderingEnabled(render)
+	setfpscap(fpscap)
 	--bypasses
 	loadstring(game:HttpGet('https://raw.githubusercontent.com/ikottiz/yba/main/bypasses'))()
 	--cuh
