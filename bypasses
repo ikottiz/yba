@@ -60,7 +60,7 @@ local loadbtn,playbtn
 local m1 = function(path)
     for i,v in pairs(getconnections(path.MouseButton1Click)) do v.Function() end
 end
-while true do
+while wait() do
     for i,v in pairs(game:GetService("Players").LocalPlayer:WaitForChild('PlayerGui'):GetDescendants()) do
         if v.Name == 'TextButton' and v.Parent.Name == 'Skip' then
             loadbtn = v
