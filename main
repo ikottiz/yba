@@ -66,7 +66,7 @@ if game.PlaceId == 2809202155 then
 	--getarrows
 	function getArrows()
 		local arrows = 0
-		for i,v in ipairs(player.Backpack:GetChildren()) do
+		for i,v in ipairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
 			if v.Name == 'Lucky Arrow' then
 				arrows = arrows + 1
 			end
@@ -77,7 +77,7 @@ if game.PlaceId == 2809202155 then
 	game.Players.LocalPlayer:WaitForChild('PlayerGui').DescendantRemoving:Connect(function(d)
 		if d.Name == 'LoadingScreen1' then
             request({
-                Url = settings.logsWebhook,
+                Url = dic.logsWebhook,
                 Method = "POST",
                 Headers = {["content-type"] = "application/json" },
                 Body = game:GetService('HttpService'):JSONEncode({
@@ -118,7 +118,7 @@ if game.PlaceId == 2809202155 then
 	game.Players.LocalPlayer.Backpack.ChildAdded:Connect(function(child)
 		if child.Name == 'Lucky Arrow' then
 			request({
-				Url = settings.farmWebhook,
+				Url = dic.farmWebhook,
 				Method = "POST",
 				Headers = {["content-type"] = "application/json" },
 				Body = game:GetService('HttpService'):JSONEncode({
@@ -152,23 +152,13 @@ if game.PlaceId == 2809202155 then
 	end)
 	--loop
 	local counter = 0
-	local temp = true
-	while wait(5) do
-		while wait() do
-			if temp then
-				for i,v in ipairs(game.Workspace.Item_Spawns.Items:GetChildren()) do
-					if v.Name == 'Lucky Arrow' then
-						collect(v)
-					end
+	while wait() do
+		for i,v in ipairs(game.Workspace.Item_Spawns.Items:GetChildren()) do
+			for k,v2 in ipairs(dic.items) do
+				if v.Name == k and v2 then
+					collect(v)
 				end
-			else
-				break
-			end 
-		end
-		counter = counter + 1
-		if counter == settings.serverTime / 5 then
-			serverhop()
-			break
+			end
 		end
 	end
 end
