@@ -1,7 +1,7 @@
 
 if game.PlaceId == 2809202155 then
 	--scriptware,krnl idk support
-	local request = http_request or request or httprequest
+	local request = http_request or request or httprequest or syn.request
 	--disable 3d render
 	game:GetService('RunService'):Set3dRenderingEnabled(dic.render)
 	setfpscap(dic.fpscap)
@@ -21,8 +21,8 @@ if game.PlaceId == 2809202155 then
 					nextCursor = ''
 				end
 				url = 'https://games.roblox.com/v1/games/'..tostring(placeId)..'/servers/Public?sortOrder=Desc&excludeFullGames=true&limit=100&cursor='..nextCursor
-				local request = game:HttpGet(url)
-				local jsonDecode = game:GetService("HttpService"):JSONDecode(request)
+				local req = game:HttpGet(url)
+				local jsonDecode = game:GetService("HttpService"):JSONDecode(req)
 				nextCursor = jsonDecode.nextPageCursor
 				if not nextCursor then
 					nextCursor = 'end'
