@@ -1,7 +1,5 @@
 
 if game.PlaceId == 2809202155 then
-	--scriptware,krnl idk support
-	local request = http_request or request or httprequest or syn.request
 	--disable 3d render
 	game:GetService('RunService'):Set3dRenderingEnabled(dic.render)
 	setfpscap(dic.fpscap)
@@ -76,7 +74,7 @@ if game.PlaceId == 2809202155 then
 	--starting
 	game.Players.LocalPlayer:WaitForChild('PlayerGui').DescendantRemoving:Connect(function(d)
 		if d.Name == 'LoadingScreen1' then
-            request({
+            syn.request({
                 Url = dic.logsWebhook,
                 Method = "POST",
                 Headers = {["content-type"] = "application/json" },
@@ -117,7 +115,7 @@ if game.PlaceId == 2809202155 then
 	end)
 	game.Players.LocalPlayer.Backpack.ChildAdded:Connect(function(child)
 		if child.Name == 'Lucky Arrow' then
-			request({
+			syn.request({
 				Url = dic.farmWebhook,
 				Method = "POST",
 				Headers = {["content-type"] = "application/json" },
