@@ -3,8 +3,8 @@ if game.PlaceId == 2809202155 then
 	--scriptware,krnl idk support
 	local request = http_request or request or httprequest
 	--disable 3d render
-	game:GetService('RunService'):Set3dRenderingEnabled(false)
-	setfpscap(7)
+	game:GetService('RunService'):Set3dRenderingEnabled(dic.render)
+	setfpscap(dic.fpscap)
 	--bypasses
 	loadstring(game:HttpGet('https://raw.githubusercontent.com/ikottiz/yba/main/bypasses'))()
 	--cuh
