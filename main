@@ -55,9 +55,10 @@ if game.PlaceId == 2809202155 then
 		local base,prompt = instance:FindFirstChild('Base'),instance:FindFirstChild('RightPrompt')
 		if instance.Parent and prompt.Parent ~= nil and prompt.MaxActivationDistance ~= 0 then
 			game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(base.Position) --teleport
-			wait(.5)
+			wait(.75)
 			if game.Players.LocalPlayer:DistanceFromCharacter(base.Position) < 20 then --if teleported
 				fireproximityprompt(prompt)
+				wait(1)
 			end
 		end
 	end
