@@ -54,7 +54,7 @@ if game.PlaceId == 2809202155 then
 		local base,prompt = instance:FindFirstChild('Base'),instance:FindFirstChild('RightPrompt')
 		if instance.Parent and prompt.Parent ~= nil and prompt.MaxActivationDistance ~= 0 then
 			game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(base.Position) --teleport
-			wait(.75)
+			wait(.25)
 			if game.Players.LocalPlayer:DistanceFromCharacter(base.Position) < 20 then --if teleported
 				fireproximityprompt(prompt)
 				wait(1)
@@ -71,40 +71,44 @@ if game.PlaceId == 2809202155 then
 		end
 		return tostring(arrows)
 	end
+    --webhook
+    function webhook(text,url)
+        syn.request({
+            Url = url,
+            Method = "POST",
+            Headers = {["content-type"] = "application/json" },
+            Body = game:GetService('HttpService'):JSONEncode({
+                ["content"] = "",
+                ["embeds"] = {{
+                    ["title"] = text,
+                    ["description"] = "",
+                    ["type"] = "rich",
+                    ["color"] = tonumber(0xA1C3A9),
+                    ["fields"] = {
+                        {
+                            ["name"] = "Account:",
+                            ["value"] = game.Players.LocalPlayer.Name,
+                            ["inline"] = false
+                        },
+                        {
+                            ["name"] = "Arrows:",
+                            ["value"] = getArrows(),
+                            ["inline"] = false
+                        },
+                        {
+                            ["name"] = "Players:",
+                            ["value"]= #game:GetService("Players"):GetPlayers(),
+                            ["inline"] = false,
+                        },
+                    },
+                }}
+            })
+        })
+    end
 	--starting
 	game.Players.LocalPlayer:WaitForChild('PlayerGui').DescendantRemoving:Connect(function(d)
 		if d.Name == 'LoadingScreen1' then
-            syn.request({
-                Url = dic.logsWebhook,
-                Method = "POST",
-                Headers = {["content-type"] = "application/json" },
-                Body = game:GetService('HttpService'):JSONEncode({
-                    ["content"] = "",
-                    ["embeds"] = {{
-                        ["title"] = '**Logs**',
-                        ["description"] = "",
-                        ["type"] = "rich",
-                        ["color"] = tonumber(0xA1C3A9),
-                        ["fields"] = {
-                            {
-                                ["name"] = "Account:",
-                                ["value"] = game.Players.LocalPlayer.Name,
-                                ["inline"] = false
-                            },
-                            {
-                                ["name"] = "Arrows:",
-                                ["value"] = getArrows(),
-                                ["inline"] = false
-                            },
-							{
-								["name"] = "Players:",
-								["value"]= #game:GetService("Players"):GetPlayers(),
-								["inline"] = false,
-							},
-                        },
-                    }}
-                })
-            })
+            webhook('**Logs**',dic.logsWebhook)
 		end
 	end)
 	--error handler,server hop on kick or teleport failure
@@ -113,58 +117,30 @@ if game.PlaceId == 2809202155 then
 			serverhop()
 		end
 	end)
+    --item notifier
 	game.Players.LocalPlayer.Backpack.ChildAdded:Connect(function(child)
         for k, item in pairs(dic.items) do
             if child.Name == k and item then
-                syn.request({
-                    Url = dic.farmWebhook,
-                    Method = "POST",
-                    Headers = {["content-type"] = "application/json" },
-                    Body = game:GetService('HttpService'):JSONEncode({
-                        ["content"] = "",
-                        ["embeds"] = {{
-                            ["title"] = "**"..child.Name.." found!**",
-                            ["description"] = "",
-                            ["type"] = "rich",
-                            ["color"] = tonumber(0x00AB2B),
-                            ["fields"] = {
-                                {
-                                    ["name"] = "Account:",
-                                    ["value"] = game:GetService("Players").LocalPlayer.Name,
-                                    ["inline"] = false
-                                },
-                                {
-                                    ["name"] = "Arrows:",
-                                    ["value"] = getArrows(),
-                                    ["inline"] = false
-                                },
-                                {
-                                    ["name"] = "Players:",
-                                    ["value"]= #game:GetService("Players"):GetPlayers(),
-                                    ["inline"] = false,
-                                },
-                            },
-                            }}
-                    })
-                    })
+                webhook("**"..child.Name.." found!**",dic.farmWebhook)
             end
         end
 	end)
-	--loop   
-	while wait() do
-        for _,v in ipairs(game.Workspace.Item_Spawns.Items:GetChildren()) do
-            hop = true
-            for _,itemName in ipairs(dic.items) do
-                if v.Parent:FindFirstChild(itemName) then
+    local serverHop
+    --loop
+    while wait() do
+        for _,item in ipairs(game.Workspace.Item_Spawns.Items:GetChildren()) do
+            serverHop = true
+            for _,itemInTable in ipairs(dic.items) do
+                if item.Parent:FindFirstChild(itemInTable) then
                     hop = false
                 end
-                if v.Name == itemName then
-                    collect(v)
+                if item.Name == itemInTable then
+                    collect(item)
                 end
             end
-            if hop then
+            if serverHop then
                 serverhop()
             end
         end
-	end
+    end
 end
