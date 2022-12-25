@@ -132,7 +132,7 @@ if game.PlaceId == 2809202155 then
             serverHop = true
             for _,itemInTable in ipairs(dic.items) do
                 if item.Parent:FindFirstChild(itemInTable) then
-                    hop = false
+                    serverHop = false
                 end
                 if item.Name == itemInTable then
                     collect(item)
