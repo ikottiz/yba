@@ -56,7 +56,7 @@ oldnamecall = hookmetamethod(game,"__namecall",function(self, ...)
 end)
 while not game:IsLoaded() do wait() end
 --loading skip
-local loadbtn,playbtn
+local loadbtn,playbtn,playbtn2
 local m1 = function(path)
     for i,v in pairs(getconnections(path.MouseButton1Click)) do v.Function() end
 end
@@ -64,16 +64,22 @@ while wait() do
     for i,v in pairs(game:GetService("Players").LocalPlayer:WaitForChild('PlayerGui'):GetDescendants()) do
         if v.Name == 'TextButton' and v.Parent.Name == 'Skip' then
             loadbtn = v
-        elseif v.Name == 'Play' and v.Parent.Name == 'LoadingScreen' then
+        elseif v.Name == 'Play' and v.Parent.Name == 'Main' then
             playbtn = v
+	elseif v.Name == 'Play' and v.Parent.Name == 'MainGame' then
+	    playbtn2 = v
         end
     end
-    if loadbtn and playbtn then
-        break
+    if loadbtn then
+        m1(loadbtn)
+        wait(3)
+        if playbtn then
+            m1(playbtn)
+	    wait(2)
+	    if playbtn2 then
+		m1(playbtn2)
+            	break
+	    end
+        end
     end
 end
-while #getconnections(loadbtn.MouseButton1Click) == 0 do wait() end
-m1(loadbtn)
-wait(.2)
-while #getconnections(playbtn.MouseButton1Click) == 0 do wait() end
-m1(playbtn)	
