@@ -83,6 +83,7 @@ while wait() do
         end
     end
 end
+--captcha bypass
 game:GetService("Players").LocalPlayer:WaitForChild('PlayerGui').ChildAdded:Connect(function(child)
     if child:IsA("ScreenGui") and child.Name == "ScreenGui" and child.DisplayOrder == 100 then
         for i,v in ipairs(child:GetDescendants()) do
