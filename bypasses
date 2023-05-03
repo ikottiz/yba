@@ -93,7 +93,10 @@ game:GetService("Players").LocalPlayer:WaitForChild('PlayerGui').ChildAdded:Conn
                         task.wait()
                     until text.TextColor3 ~= Color3.fromRGB(255,255,255)
                     if text.TextColor3 == Color3.fromRGB(0, 255, 0) then
-                        m1(v)
+			    firesignal(v.MouseEnter)
+			    firesignal(v.MouseButton1Up)
+			    firesignal(v.MouseButton1Click)
+			    firesignal(v.Activated)
                     end
                 end
             end
