@@ -83,3 +83,20 @@ while wait() do
         end
     end
 end
+game:GetService("Players").LocalPlayer:WaitForChild('PlayerGui').ChildAdded:Connect(function(child)
+    if child:IsA("ScreenGui") and child.Name == "ScreenGui" and child.DisplayOrder == 100 then
+        for i,v in ipairs(child:GetDescendants()) do
+            if v:IsA("ImageButton") then
+                local text = v:FindFirstChildOfClass("TextLabel")
+                if text and text.Text ~= "X" then
+                    repeat
+                        task.wait()
+                    until text.TextColor3 ~= Color3.fromRGB(255,255,255)
+                    if text.TextColor3 == Color3.fromRGB(0, 255, 0) then
+                        m1(v)
+                    end
+                end
+            end
+        end
+    end
+end)
