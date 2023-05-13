@@ -58,28 +58,20 @@ while not game:IsLoaded() do wait() end
 --loading skip
 local loadbtn,playbtn,playbtn2
 local m1 = function(path)
-    for i,v in pairs(getconnections(path.MouseButton1Click)) do v.Function() end
+    firesignal(path.MouseEnter)
+    firesignal(path.MouseButton1Up)
+    firesignal(path.MouseButton1Click)
+    firesignal(path.Activated)
 end
 while wait() do
     for i,v in pairs(game:GetService("Players").LocalPlayer:WaitForChild('PlayerGui'):GetDescendants()) do
         if v.Name == 'TextButton' and v.Parent.Name == 'Skip' then
-            loadbtn = v
+	    m1(v)
         elseif v.Name == 'Play' and v.Parent.Name == 'Main' then
-            playbtn = v
+	    m1(v)
 	elseif v.Name == 'Play' and v.Parent.Name == 'MainGame' then
-	    playbtn2 = v
-        end
-    end
-    if loadbtn then
-        m1(loadbtn)
-        wait(3)
-        if playbtn then
-            m1(playbtn)
-	    wait(2)
-	    if playbtn2 then
-		m1(playbtn2)
-            	break
-	    end
+	    m1(v)
+	    break
         end
     end
 end
@@ -94,10 +86,7 @@ game:GetService("Players").LocalPlayer:WaitForChild('PlayerGui').ChildAdded:Conn
                         task.wait()
                     until text.TextColor3 ~= Color3.fromRGB(255,255,255)
                     if text.TextColor3 == Color3.fromRGB(0, 255, 0) then
-			    firesignal(v.MouseEnter)
-			    firesignal(v.MouseButton1Up)
-			    firesignal(v.MouseButton1Click)
-			    firesignal(v.Activated)
+			m1(v)
                     end
                 end
             end
