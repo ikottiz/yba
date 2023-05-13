@@ -56,7 +56,6 @@ oldnamecall = hookmetamethod(game,"__namecall",function(self, ...)
 end)
 while not game:IsLoaded() do wait() end
 --loading skip
-local loadbtn,playbtn,playbtn2
 local m1 = function(path)
     firesignal(path.MouseEnter)
     firesignal(path.MouseButton1Up)
