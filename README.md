@@ -1,3 +1,3 @@
 # YBA Autofarm
 
-dm me on discord if you have questions(ikottiz)
+shit that made 675$ in July 2023
